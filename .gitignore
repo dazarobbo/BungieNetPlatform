@@ -1,4 +1,4 @@
-/composer.lock
-/nbproject/
+composer.lock
+nbproject/
 vendor/
-
+vendor/.git
