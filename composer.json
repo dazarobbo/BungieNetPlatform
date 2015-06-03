@@ -12,8 +12,8 @@
         }
     ],
 	"autoload": {
-		"psr-0": {
-			"BungieNetPlatform": "src/"
+		"psr-4": {
+			"BungieNetPlatform\\": "src/"
 		}
 	},
     "require": {
