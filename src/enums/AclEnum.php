@@ -1,0 +1,34 @@
+<?php
+
+namespace BungieNetPlatform\Enums;
+
+/**
+ * AclEnum
+ */
+class AclEnum extends \Cola\Enum {
+	
+	const NONE = 0;
+	const BNEXT_FORUM_NINJA = 1;
+	const BNEXT_UNLIMITED_GROUPS = 2;
+	const BNEXT_FOUNDER_IN_ALL_GROUPS = 3;
+	const BNEXT_BUNGIE_GOLD = 4;
+	const BNEXT_NINJA_COLORS = 5;
+	const BNEXT_MAKE_OFFICIAL_TOPICS = 6;
+	const BNEXT_MAKE_NINJA_TOPICS = 7;
+	const BNEXT_DELETE_FORUM_TOPICS = 8;
+	const BNEXT_OVERTURN_REPORTS = 9;
+	const BNEXT_BROWSE_REPORTS = 10;
+	const BNEXT_GLOBAL_IGNORE = 11;
+	const BNEXT_EDIT_ANY_PUBLIC_POST = 12;
+	const BNEXT_EDIT_USERS = 13;
+	const BNEXT_ULTRA_BAN = 14;
+	const BNEXT_FORUM_MENTOR = 15;
+	const TIGER_BAN = 16;
+	const BNEXT_FORUM_CURATOR = 17;
+	const BNEXT_BIG_LIKES = 18;
+	const BNEXT_PLAYER_SUPPORT = 19;
+	const BNEXT_PIN_TOPICS = 20;
+	const BNEXT_LOCK_TOPICS = 21;
+	
+
+}
