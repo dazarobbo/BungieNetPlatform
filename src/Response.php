@@ -20,12 +20,9 @@ class Response extends \Cola\Object implements \JsonSerializable {
 		
 	}
 	
-	public static function parseResponse(\stdClass $response){
-		
-		$response->getBody()->
+	public static function parseResponse(\stdClass $json){
 		
 		$self = new static();
-		$json = $response->json();
 		
 		$self->_ErrorCode = \intval($json['ErrorCode'], 10);
 		$self->_ErrorStatus = $json['ErrorStatus'];
