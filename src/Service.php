@@ -12,9 +12,28 @@ abstract class Service extends \Cola\Object {
 	 * @var Platform
 	 */
 	protected $_Platform;
+	protected $_Name;
 	
-	public function __construct(Platform $platform) {
+	public function __construct(Platform $platform, $name) {
 		$this->_Platform = $platform;
+		$this->_Name = $name;
+	}
+	
+	protected function doRequest(\GuzzleHttp\Psr7\Request $request){
+		
+		$uri = $request
+				->getUri()
+				->withScheme(BungieNet::PROTOCOL)
+				->withHost(BungieNet::host())
+				->withPath(
+						BungieNet::platformPath() . '/' .
+						$this->_Name .
+						$request->getUri()->getPath());
+					
+		$request = $request->withUri($uri);
+		
+		return $this->_Platform->doRequest($request);
+		
 	}
 	
 }

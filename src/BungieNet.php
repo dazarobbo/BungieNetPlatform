@@ -19,7 +19,11 @@ abstract class BungieNet{
 	}
 
 	public static function platformPath(){
-		return \sprintf('%s/platform', static::Base());
+		return '/platform';
+	}
+	
+	public static function fullPlatformPath(){
+		return \sprintf('%s%s', static::base(), static::platformPath());
 	}
 	
 	

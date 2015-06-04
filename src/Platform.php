@@ -47,12 +47,9 @@ class Platform extends \Cola\Object {
 	
 	public function doRequest(\GuzzleHttp\Psr7\Request $request){
 		
-		$client = new GuzzleHttp\Client([
-			
-		]);
+		$client = new GuzzleHttp\Client([]);
 		
 		$request = $request
-				->withRequestTarget(BungieNet::host())
 				->withHeader('X-API-Key', $this->_ApiKey);
 		
 		if($this->_InUserContext){
