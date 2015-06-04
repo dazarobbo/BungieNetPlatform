@@ -2,6 +2,7 @@
 
 	require_once __DIR__ . '/../vendor/autoload.php';
 	
-	use BungieNetPlatform\BungieNet;
+	$platform = new \BungieNetPlatform\Platform('key');
 	
-	echo BungieNet::base();
+	$platform->Services->Destiny->getPublicXurVendor();
+	

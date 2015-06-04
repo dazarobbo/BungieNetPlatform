@@ -45,7 +45,7 @@ class PsnUser extends PlatformUser {
 			$client->get('/login.jsp');
 		}
 		catch(\Exception $ex){
-			throw new PsnAuthenticationException('Failed to get login page', 0, $ex);
+			throw new PsnAuthenticationException('Failed to get PSN login page', 0, $ex);
 		}
 		
 		try{
@@ -57,11 +57,11 @@ class PsnUser extends PlatformUser {
 			]);
 		}
 		catch(\Exception $ex){
-			throw new PsnAuthenticationException('Failed to POST details', 0, $ex);
+			throw new PsnAuthenticationException('Failed to POST PSN details', 0, $ex);
 		}
 		
 		if(!String::endsWith($resp->getEffectiveUrl(), 'loginSuccess.jsp')){
-			throw new PsnAuthenticationException('Authentication failed');
+			throw new PsnAuthenticationException('PSN authentication failed');
 		}
 		
 	}

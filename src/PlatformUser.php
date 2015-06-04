@@ -5,12 +5,13 @@ namespace BungieNetPlatform;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\SetCookie;
 use Cola\Functions\PHPArray;
+use Cola\Object;
 use BungieNetPlatform\Exceptions;
 
 /**
  * PlatformUser
  */
-abstract class PlatformUser extends \Cola\Object {
+abstract class PlatformUser extends Object {
 
 	/**
 	 *
@@ -49,6 +50,22 @@ abstract class PlatformUser extends \Cola\Object {
 		});
 	}
 
+	public function getCsrfToken(){
+		
+		foreach($this->getBungieCookies() as $cookie){
+			if($cookie->getName() === 'bungled'){
+				return $cookie->getValue();
+			}
+		}
+		
+		return null;
+		
+	}
+	
+	public function &getCookieJar(){
+		return $this->_CookieJar;
+	}
+	
 	public function authenticate(){
 		
 		$this->authenticateProvider();
