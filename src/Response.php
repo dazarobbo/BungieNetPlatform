@@ -87,7 +87,7 @@ class Response extends \Cola\Object implements \JsonSerializable {
 	 * @return string
 	 */
 	public function __toString() {
-		return $this->jsonSerialize();
+		return Json::serialise($this);
 	}
 
 	/**
