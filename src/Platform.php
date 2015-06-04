@@ -52,7 +52,7 @@ class Platform extends \Cola\Object {
 			'base_url' => BungieNet::platformPath() . '/',
 			'debug' => true
 		]);
-		
+		 
 		$client->getEmitter()->attach(new GuzzleHttp\Subscriber\Log\LogSubscriber());
 		
 		$request->addHeader('X-API-Key', $this->_ApiKey);
