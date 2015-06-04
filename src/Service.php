@@ -23,8 +23,6 @@ abstract class Service extends \Cola\Object {
 		
 		$uri = $request
 				->getUri()
-				->withScheme(BungieNet::PROTOCOL)
-				->withHost(BungieNet::host())
 				->withPath(
 						BungieNet::platformPath() . '/' .
 						$this->_Name .

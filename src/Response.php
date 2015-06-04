@@ -95,11 +95,13 @@ class Response extends \Cola\Object implements \JsonSerializable {
 	 * @return \static
 	 */
 	public function jsonSerialize() {
-		
+				
 		$o = \get_object_vars($this);
 		
+		//Remove _ prefix
 		foreach($o as $k => $v){
-			$o[\str_replace('_', '', $k)] = $v;
+			unset($o[$k]);
+			$o[\substr($k, 1)] = $v;
 		}
 		
 		return $o;

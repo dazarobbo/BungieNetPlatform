@@ -30,5 +30,4 @@ class AclEnum extends \Cola\Enum {
 	const BNEXT_PIN_TOPICS = 20;
 	const BNEXT_LOCK_TOPICS = 21;
 	
-
 }

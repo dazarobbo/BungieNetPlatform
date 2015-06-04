@@ -51,6 +51,8 @@ class Platform extends \Cola\Object {
 		$client = new GuzzleHttp\Client([]);
 		
 		$request = $request
+				->withScheme(BungieNet::PROTOCOL)
+				->withHost(BungieNet::host())
 				->withHeader('X-API-Key', $this->_ApiKey);
 		
 		if($this->_InUserContext){
@@ -58,7 +60,7 @@ class Platform extends \Cola\Object {
 			$client->setDefaultOption('cookies', $this->_User->getCookieJar());
 		}
 		
-		echo 'Sending request to: ' . $request->getUri() . PHP_EOL;
+		echo 'Making request to: ' . $request->getUri() . PHP_EOL;
 		
 		try{
 			$response = $client->send($request);
