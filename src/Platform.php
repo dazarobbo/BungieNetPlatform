@@ -4,6 +4,7 @@ namespace BungieNetPlatform;
 
 use GuzzleHttp;
 use GuzzleHttp\Message\Request;
+use BungieNetPlatform\Exceptions;
 
 /**
  * Platform
