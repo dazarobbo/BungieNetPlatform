@@ -2,7 +2,7 @@
 
 namespace BungieNetPlatform;
 
-use GuzzleHttp\Message;
+use GuzzleHttp\Psr7\Request as GuzzleRequest;
 
 /**
  * DestinyService
@@ -15,7 +15,7 @@ class DestinyService extends Service {
 	}
 		
 	public function getPublicXurVendor(){
-		return $this->_Platform->doRequest(new Message\Request('GET', '/platform/destiny/advisors/xur'));
+		return $this->_Platform->doRequest(new GuzzleRequest('GET', '/platform/destiny/advisors/xur'));
 	}
 
 }
