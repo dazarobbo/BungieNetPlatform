@@ -15,7 +15,7 @@ class DestinyService extends Service {
 	}
 		
 	public function getPublicXurVendor(){
-		return $this->_Platform->doRequest(new Request('destiny/advisors/xur'));
+		return $this->_Platform->doRequest(new Request('GET', 'destiny/advisors/xur'));
 	}
 
 }
