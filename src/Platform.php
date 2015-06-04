@@ -3,7 +3,6 @@
 namespace BungieNetPlatform;
 
 use GuzzleHttp;
-use GuzzleHttp\Message\Request;
 use BungieNetPlatform\Exceptions;
 
 /**
@@ -46,23 +45,22 @@ class Platform extends \Cola\Object {
 		$this->DestinyService = new DestinyService($this);
 	}
 	
-	public function doRequest(Request $request){
+	public function doRequest(\GuzzleHttp\Psr7\Request $request){
 		
 		$client = new GuzzleHttp\Client([
 			
 		]);
 		
-		//$client->getEmitter()->attach(new GuzzleHttp\Subscriber\Log\LogSubscriber(
-		//		null,
-		//		GuzzleHttp\Subscriber\Log\Formatter::DEBUG));
-		
-		$request->setHost(BungieNet::host());		
-		$request->addHeader('X-API-Key', $this->_ApiKey);
+		$request = $request
+				->withRequestTarget(BungieNet::host())
+				->withHeader('X-API-Key', $this->_ApiKey);
 		
 		if($this->_InUserContext){
-			$request->addHeader('X-CSRF', $this->_User->getCsrfToken());
+			$request = $request->withHeader('X-CSRF', $this->_User->getCsrfToken());
 			$client->setDefaultOption('cookies', $this->_User->getCookieJar());
 		}
+		
+		echo 'Sending request to: ' . $request->getUri() . PHP_EOL;
 		
 		try{
 			$resp = $client->send($request);
