@@ -53,6 +53,8 @@ class Platform extends \Cola\Object {
 			'debug' => true
 		]);
 		
+		$client->getEmitter()->attach(new GuzzleHttp\Subscriber\Log\LogSubscriber());
+		
 		$request->addHeader('X-API-Key', $this->_ApiKey);
 		
 		if($this->_InUserContext){
