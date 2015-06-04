@@ -24,12 +24,12 @@ class Response extends \Cola\Object implements \JsonSerializable {
 		
 		$self = new static();
 		
-		$self->_ErrorCode = \intval($json['ErrorCode'], 10);
-		$self->_ErrorStatus = $json['ErrorStatus'];
-		$self->_Message = $json['Message'];
-		$self->_MessageData = (object)$json['MessageData'];
-		$self->_Response = (object)$json['Response'];
-		$self->_ThrottleSeconds = \intval($json['ThrottleSeconds'], 10);
+		$self->_ErrorCode = $json->ErrorCode;
+		$self->_ErrorStatus = $json->ErrorStatus;
+		$self->_Message = $json->Message;
+		$self->_MessageData = $json->MessageData;
+		$self->_Response = $json->Response;
+		$self->_ThrottleSeconds = $json->ThrottleSeconds;
 		
 		return $self;
 		
