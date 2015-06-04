@@ -50,9 +50,12 @@ class Platform extends \Cola\Object {
 		
 		$client = new GuzzleHttp\Client([]);
 		
+		$request = $request->withUri(
+				$request->getUri()
+						->withScheme(BungieNet::PROTOCOL)
+						->withHost(BungieNet::host()));
+		
 		$request = $request
-				->withScheme(BungieNet::PROTOCOL)
-				->withHost(BungieNet::host())
 				->withHeader('X-API-Key', $this->_ApiKey);
 		
 		if($this->_InUserContext){
