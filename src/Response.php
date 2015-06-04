@@ -91,11 +91,11 @@ class Response extends \Cola\Object implements \JsonSerializable {
 	}
 
 	/**
-	 * Returns this response as a JSON formatted string
-	 * @return string
+	 * 
+	 * @return \static
 	 */
 	public function jsonSerialize() {
-		return Json::serialise($this);
+		return $this;
 	}
 
 }
