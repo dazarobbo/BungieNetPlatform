@@ -63,11 +63,11 @@ class Platform extends \Cola\Object {
 			$resp = $client->send($request);		
 		}
 		catch(\Exception $ex){
-			throw new PlatformRequestException('Platform HTTP request failed', 0, $ex);
+			throw new Exceptions\PlatformRequestException('Platform HTTP request failed', 0, $ex);
 		}
 		
 		if($resp->getStatusCode() !== 200){
-			throw new PlatformRequestException(
+			throw new Exceptions\PlatformRequestException(
 					\sprintf('Request returned HTTP %d', $resp->getStatusCode()),
 					$resp->getStatusCode());
 		}
