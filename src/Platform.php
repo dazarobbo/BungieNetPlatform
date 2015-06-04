@@ -49,7 +49,8 @@ class Platform extends \Cola\Object {
 	public function doRequest(Request $request){
 		
 		$client = new GuzzleHttp\Client([
-			'base_url' => BungieNet::platformPath() . '/'
+			'base_url' => BungieNet::platformPath() . '/',
+			'debug' => true
 		]);
 		
 		$request->addHeader('X-API-Key', $this->_ApiKey);
@@ -60,7 +61,7 @@ class Platform extends \Cola\Object {
 		}
 		
 		try{
-			$resp = $client->send($request);		
+			$resp = $client->send($request);
 		}
 		catch(\Exception $ex){
 			throw new Exceptions\PlatformRequestException('Platform HTTP request failed', 0, $ex);
