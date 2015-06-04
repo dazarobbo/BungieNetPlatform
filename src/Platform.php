@@ -29,13 +29,20 @@ class Platform extends \Cola\Object {
 	protected $_InUserContext = false;
 	
 	
-	public $Services;
-	
-	
-	
+	/**
+	 *
+	 * @var DestinyService
+	 */
+	public $DestinyService;
+
+
+
+
+
+
 	public function __construct($key) {
 		$this->setKey($key);
-		$this->Services = new Services($this);
+		$this->DestinyService = new DestinyService($this);
 	}
 	
 	public function doRequest(Request $request){
