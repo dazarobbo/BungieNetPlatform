@@ -3,7 +3,6 @@
 namespace BungieNetPlatform;
 
 use Cola\Json;
-use GuzzleHttp\Message;
 
 /**
  * Response
@@ -21,7 +20,9 @@ class Response extends \Cola\Object implements \JsonSerializable {
 		
 	}
 	
-	public static function parseResponse(Message\Response $response){
+	public static function parseResponse(\stdClass $response){
+		
+		$response->getBody()->
 		
 		$self = new static();
 		$json = $response->json();

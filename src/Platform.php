@@ -4,6 +4,7 @@ namespace BungieNetPlatform;
 
 use GuzzleHttp;
 use BungieNetPlatform\Exceptions;
+use Cola\Json;
 
 /**
  * Platform
@@ -60,19 +61,20 @@ class Platform extends \Cola\Object {
 		echo 'Sending request to: ' . $request->getUri() . PHP_EOL;
 		
 		try{
-			$resp = $client->send($request);
+			$response = $client->send($request);
 		}
 		catch(\Exception $ex){
-			throw new Exceptions\PlatformRequestException('Platform HTTP request failed', 0, $ex);
+			throw new PlatformRequestException('Platform HTTP request failed', 0, $ex);
 		}
 		
-		if($resp->getStatusCode() !== 200){
-			throw new Exceptions\PlatformRequestException(
-					\sprintf('Request returned HTTP %d', $resp->getStatusCode()),
-					$resp->getStatusCode());
+		if($response->getStatusCode() !== 200){
+			throw new PlatformRequestException(
+					\sprintf('Request returned HTTP %d', $response->getStatusCode()),
+					$response->getStatusCode());
 		}
 		
-		return Response::parseResponse($resp);
+		return Response::parseResponse(Json::deserialise(
+				$response->getBody()->getContents()));
 		
 	}
 
