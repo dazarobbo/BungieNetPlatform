@@ -49,14 +49,14 @@ class Platform extends \Cola\Object {
 	public function doRequest(Request $request){
 		
 		$client = new GuzzleHttp\Client([
-			'base_url' => BungieNet::platformPath() . '/',
-			'debug' => true
+			
 		]);
-		 
-		$client->getEmitter()->attach(new GuzzleHttp\Subscriber\Log\LogSubscriber(
-				null,
-				GuzzleHttp\Subscriber\Log\Formatter::DEBUG));
 		
+		//$client->getEmitter()->attach(new GuzzleHttp\Subscriber\Log\LogSubscriber(
+		//		null,
+		//		GuzzleHttp\Subscriber\Log\Formatter::DEBUG));
+		
+		$request->setHost(BungieNet::host());		
 		$request->addHeader('X-API-Key', $this->_ApiKey);
 		
 		if($this->_InUserContext){
