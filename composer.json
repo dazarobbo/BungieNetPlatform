@@ -19,6 +19,13 @@
 	},
     "require": {
 		"guzzlehttp/guzzle": "6.0.1",
-        "sunra/php-simple-html-dom-parser": "v1.5.0"
-    }
+        "sunra/php-simple-html-dom-parser": "v1.5.0",
+		"dazarobbo/cola": "dev-master"
+    },
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/dazarobbo/Cola"
+		}
+	]
 }

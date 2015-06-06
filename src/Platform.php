@@ -31,10 +31,24 @@ class Platform extends \Cola\Object {
 	
 	
 	/**
-	 *
 	 * @var DestinyService
 	 */
 	public $DestinyService;
+	
+	/**
+	 * @var UserService
+	 */
+	public $UserService;
+	
+	/**
+	 * @var GroupService
+	 */
+	public $GroupService;
+	
+	/**
+	 * @var ForumService
+	 */
+	public $ForumService;
 
 
 
@@ -44,6 +58,9 @@ class Platform extends \Cola\Object {
 	public function __construct($key) {
 		$this->setKey($key);
 		$this->DestinyService = new DestinyService($this);
+		$this->UserService = new UserService($this);
+		$this->GroupService = new GroupService($this);
+		$this->ForumService = new ForumService($this);
 	}
 	
 	public function doRequest(\GuzzleHttp\Psr7\Request $request){
@@ -63,7 +80,9 @@ class Platform extends \Cola\Object {
 			$client->setDefaultOption('cookies', $this->_User->getCookieJar());
 		}
 		
-		echo 'Making request to: ' . $request->getUri() . PHP_EOL;
+		if(\defined('DEBUG_PLATFORM')){
+			echo 'Making request to: ' . $request->getUri() . \PHP_EOL;
+		}
 		
 		try{
 			$response = $client->send($request);
