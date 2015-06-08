@@ -3,8 +3,8 @@
 namespace BungieNetPlatform;
 
 use GuzzleHttp;
+use BungieNetPlatform\Services;
 use BungieNetPlatform\Exceptions;
-use Cola\Json;
 
 /**
  * Platform
@@ -29,106 +29,140 @@ class Platform extends \Cola\Object {
 	 */
 	protected $_InUserContext = false;
 	
-	
 	/**
-	 * @var DestinyService
+	 * @var Services\Destiny\DestinyService
 	 */
 	public $DestinyService;
 	
 	/**
-	 * @var UserService
+	 * @var Services\User\UserService
 	 */
 	public $UserService;
 	
 	/**
-	 * @var GroupService
+	 * @var Services\Group\GroupService
 	 */
 	public $GroupService;
 	
 	/**
-	 * @var ForumService
+	 * @var Services\Forum\ForumService
 	 */
 	public $ForumService;
 
 
-
-
-
-
-	public function __construct($key) {
+	public function __construct($key = null) {
 		$this->setKey($key);
-		$this->DestinyService = new DestinyService($this);
-		$this->UserService = new UserService($this);
-		$this->GroupService = new GroupService($this);
-		$this->ForumService = new ForumService($this);
+		$this->DestinyService = new Services\Destiny\DestinyService($this);
+		$this->UserService = new Services\User\UserService($this);
+		$this->GroupService = new Services\Group\GroupService($this);
+		$this->ForumService = new Services\Forum\ForumService($this);
 	}
 	
+	/**
+	 * 
+	 * @param \GuzzleHttp\Psr7\Request $request
+	 * @return \GuzzleHttp\Psr7\Response
+	 * @throws PlatformRequestException
+	 */
 	public function doRequest(\GuzzleHttp\Psr7\Request $request){
 		
-		$client = new GuzzleHttp\Client([]);
+		$client = new GuzzleHttp\Client();
 		
 		$request = $request->withUri(
 				$request->getUri()
-						->withScheme(BungieNet::PROTOCOL)
-						->withHost(BungieNet::host()));
+						->withScheme(\BungieNetPlatform\BungieNet::PROTOCOL)
+						->withHost(\BungieNetPlatform\BungieNet::host()));
 		
-		$request = $request
-				->withHeader('X-API-Key', $this->_ApiKey);
+		if($this->_ApiKey !== null){
+			$request = $request
+					->withHeader('X-API-Key', $this->_ApiKey);
+		}
 		
 		if($this->_InUserContext){
 			$request = $request->withHeader('X-CSRF', $this->_User->getCsrfToken());
 			$client->setDefaultOption('cookies', $this->_User->getCookieJar());
 		}
-		
-		if(\defined('DEBUG_PLATFORM')){
-			echo 'Making request to: ' . $request->getUri() . \PHP_EOL;
-		}
-		
+				
 		try{
 			$response = $client->send($request);
 		}
 		catch(\Exception $ex){
-			throw new PlatformRequestException('Platform HTTP request failed', 0, $ex);
+			throw new Exceptions\PlatformRequestException(
+					'Platform HTTP request failed', 0, $ex);
 		}
 		
 		if($response->getStatusCode() !== 200){
-			throw new PlatformRequestException(
+			throw new Exceptions\PlatformRequestException(
 					\sprintf('Request returned HTTP %d', $response->getStatusCode()),
 					$response->getStatusCode());
 		}
 		
-		return Response::parseResponse(Json::deserialise(
-				$response->getBody()->getContents()));
+		return $response;
 		
 	}
 
+	/**
+	 * Sets a new key
+	 * @param string $key
+	 * @return \BungieNetPlatform\Platform
+	 */
 	public function setKey($key){
 		$this->_ApiKey = $key;
+		return $this;
 	}
 	
+	/**
+	 * Returns the currently set key
+	 * @return string
+	 */
 	public function getKey(){
 		return $this->_ApiKey;
 	}
 
+	/**
+	 * Sets the user to use to make requests to private endpoints
+	 * @see http://bungienetplatform.wikia.com/wiki/Category:PrivateEndpoint
+	 * @param \BungieNetPlatform\PlatformUser $user
+	 * @return \BungieNetPlatform\Platform
+	 */
 	public function setUser(PlatformUser $user){
 		$this->_User = $user;
+		return $this;
 	}
 	
+	/**
+	 * Returns the currently set user
+	 * @return PlatformUser
+	 */
 	public function getUser(){
 		return $this->_User;
 	}
 	
+	/**
+	 * Authenticates the set user
+	 * @return \BungieNetPlatform\Platform
+	 */
 	public function authenticateUser(){
 		$this->_User->authenticate();
-		$this->_InUserContext = true;
+		return $this;
+	}
+	
+	/**
+	 * Whether the platform will make a request as a user
+	 * @return bool
+	 */
+	public function inUserContext(){
+		return $this->_InUserContext;
 	}
 	
 	/**
 	 * Sets whether or not to make requests as a user
 	 * @param bool $var
+	 * @return \BungieNetPlatform\Platform
 	 */
-	public function setUserContext($var){
+	public function setUserContext($var = true){
 		$this->_InUserContext = $var ? true : false;
+		return $this;
 	}
 	
 }

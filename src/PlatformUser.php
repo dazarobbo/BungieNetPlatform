@@ -4,8 +4,8 @@ namespace BungieNetPlatform;
 
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\SetCookie;
-use Cola\Functions\PHPArray;
 use Cola\Object;
+use Cola\Functions\PHPArray;
 use BungieNetPlatform\Exceptions;
 
 /**
@@ -14,25 +14,41 @@ use BungieNetPlatform\Exceptions;
 abstract class PlatformUser extends Object {
 
 	/**
-	 *
+	 * Cookies used by the user to make requests to the
+	 * platform
 	 * @var CookieJar
 	 */
 	protected $_CookieJar;
 
+	/**
+	 * Cookies necessary to be considered authorised
+	 * @var string[]
+	 */
 	protected static $_RequiredCookies = [
 		'bungleatk',
 		'bungled',
 		'bungledid'
 	];
 
-
 	public function __construct() {
 		$this->_CookieJar = new CookieJar();
 	}
 	
+	/**
+	 * Performs authentication with the login provider
+	 */
 	protected abstract function authenticateProvider();
+	
+	/**
+	 * Performs authentication with bungie.net
+	 */
 	protected abstract function authenticateBungie();
 
+	/**
+	 * Checks whether the necessary cookies exist to be
+	 * considered authorised
+	 * @return bool
+	 */
 	protected function requiredCookiesExist(){
 		
 		$bngCookieNames = PHPArray::map($this->getBungieCookies(),
@@ -44,12 +60,20 @@ abstract class PlatformUser extends Object {
 		
 	}
 	
+	/**
+	 * Returns the bungie.net cookies for this user
+	 * @return SetCookie[]
+	 */
 	public function getBungieCookies(){
 		return PHPArray::map($this->_CookieJar->toArray(), function(SetCookie $c){
 			$c->matchesDomain(BungieNet::DOMAIN);
 		});
 	}
 
+	/**
+	 * Gets the CSRF token for this user
+	 * @return string|null
+	 */
 	public function getCsrfToken(){
 		
 		foreach($this->getBungieCookies() as $cookie){
@@ -62,17 +86,27 @@ abstract class PlatformUser extends Object {
 		
 	}
 	
+	/**
+	 * Returns a reference to this user's cookie jar
+	 * @return CookieJar
+	 */
 	public function &getCookieJar(){
 		return $this->_CookieJar;
 	}
 	
+	/**
+	 * Performs the necessary authentication in order to be
+	 * authorised to use bungie.net in a user context
+	 * @throws Exceptions\AuthenticationException
+	 */
 	public function authenticate(){
 		
 		$this->authenticateProvider();
 		$this->authenticateBungie();
 		
 		if(!$this->requiredCookiesExist()){
-			throw new AuthenticationException('Required bungie.net cookies not set');
+			throw new Exceptions\AuthenticationException(
+					'Required bungie.net cookies not set');
 		}
 		
 	}

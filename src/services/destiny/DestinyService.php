@@ -1,11 +1,14 @@
 <?php
 
-namespace BungieNetPlatform;
+namespace BungieNetPlatform\Services\Destiny;
 
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7;
-use BungieNetPlatform\Enums;
 use Cola\Json;
+use BungieNetPlatform\Platform;
+use BungieNetPlatform\Enums;
+use BungieNetPlatform\Responses;
+use BungieNetPlatform\Services\Service;
 
 /**
  * DestinyService
@@ -19,12 +22,20 @@ class DestinyService extends Service {
 		parent::__construct($platform, static::NAME);
 	}
 	
+	/**
+	 * 
+	 * @param Enums\BungieMembershipType $membershipType
+	 * @param type $membershipId
+	 * @return Responses\DestinyAccountResponse
+	 */
 	public function getAccount(
 			Enums\BungieMembershipType $membershipType,
 			$membershipId){
 		
-		return $this->doRequest(new Request('GET', \sprintf(
+		$json = $this->doRequest(new Request('GET', \sprintf(
 				'/%d/account/%s', (string)$membershipType, $membershipId)));
+		
+		return new Responses\DestinyAccountResponse($json);
 		
 	}
 	

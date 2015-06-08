@@ -1,11 +1,13 @@
 <?php
 
-namespace BungieNetPlatform;
+namespace BungieNetPlatform\Services\Forum;
 
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Request;
-use BungieNetPlatform\Enums;
 use Cola\Json;
+use BungieNetPlatform\Enums;
+use BungieNetPlatform\Platform;
+use BungieNetPlatform\Services\Service;
 
 /**
  * ForumService

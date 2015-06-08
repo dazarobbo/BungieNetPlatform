@@ -1,6 +1,6 @@
 <?php
 
-namespace BungieNetPlatform\Manifest;
+namespace BungieNetPlatform\Services\Destiny\Manifest;
 
 use Cola\Functions\Number;
 use Cola\Object;

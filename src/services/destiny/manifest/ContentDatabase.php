@@ -1,6 +1,6 @@
 <?php
 
-namespace BungieNetPlatform\Manifest;
+namespace BungieNetPlatform\Services\Destiny\Manifest;
 
 use Cola\Database\ConnectionParameters;
 use Cola\Database\Database;
@@ -40,7 +40,7 @@ class ContentDatabase extends Database {
 	}
 
 	public function __toString() {
-		return __CLASS__;
+		return $this->getPath();
 	}
 
 }

@@ -26,8 +26,6 @@ abstract class BungieNet{
 		return \sprintf('%s%s', static::base(), static::platformPath());
 	}
 	
-	
-
 	/**
 	 * 
 	 * @deprecated

@@ -4,13 +4,24 @@ namespace BungieNetPlatform;
 
 use GuzzleHttp;
 use Cola\Functions\String;
+use BungieNetPlatform\Exceptions\BungieAuthenticationException;
+use BungieNetPlatform\Exceptions\PsnAuthenticationException;
 
 /**
  * PsnUser
  */
 class PsnUser extends PlatformUser {
 	
+	/**
+	 * PSN email address
+	 * @var string
+	 */
 	protected $_Email;
+	
+	/**
+	 * PSN password
+	 * @var string
+	 */
 	protected $_Password;
 	
 	public function __construct($email, $password) {
@@ -19,6 +30,7 @@ class PsnUser extends PlatformUser {
 		$this->_Password = $password;
 	}
 
+	
 	protected function authenticateBungie() {
 		
 		$client = new GuzzleHttp\Client([
@@ -29,7 +41,8 @@ class PsnUser extends PlatformUser {
 			$client->get('https://www.bungie.net/en/User/SignIn/Psnid');
 		}
 		catch(\Exception $ex){
-			throw new BungieAuthenticationException('Failed to connect to bungie.net', 0, $ex);
+			throw new BungieAuthenticationException(
+					'Failed to connect to bungie.net', 0, $ex);
 		}
 		
 	}
@@ -45,7 +58,8 @@ class PsnUser extends PlatformUser {
 			$client->get('/login.jsp');
 		}
 		catch(\Exception $ex){
-			throw new PsnAuthenticationException('Failed to get PSN login page', 0, $ex);
+			throw new PsnAuthenticationException(
+					'Failed to get PSN login page', 0, $ex);
 		}
 		
 		try{
@@ -57,7 +71,8 @@ class PsnUser extends PlatformUser {
 			]);
 		}
 		catch(\Exception $ex){
-			throw new PsnAuthenticationException('Failed to POST PSN details', 0, $ex);
+			throw new PsnAuthenticationException(
+					'Failed to POST PSN details', 0, $ex);
 		}
 		
 		if(!String::endsWith($resp->getEffectiveUrl(), 'loginSuccess.jsp')){

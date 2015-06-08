@@ -4,15 +4,25 @@ namespace BungieNetPlatform;
 
 use GuzzleHttp;
 use Cola\Functions\String;
-use BungieNetPlatform\Exceptions;
 use Sunra\PhpSimple\HtmlDomParser;
+use BungieNetPlatform\Exceptions\BungieAuthenticationException;
+use BungieNetPlatform\Exceptions\XboxAuthenticationException;
 
 /**
  * XboxUser
  */
 class XboxUser extends PlatformUser {
 
+	/**
+	 * Microsoft Account email address
+	 * @var string
+	 */
 	protected $_Email;
+	
+	/**
+	 * Microsoft Account password
+	 * @var string
+	 */
 	protected $_Password;
 
 	public function __construct($email, $password) {
@@ -31,7 +41,8 @@ class XboxUser extends PlatformUser {
 			$client->get('https://www.bungie.net/en/User/SignIn/Xuid');
 		}
 		catch(\Exception $ex){
-			throw new BungieAuthenticationException('Failed to connect to bungie.net', 0, $ex);
+			throw new BungieAuthenticationException(
+					'Failed to connect to bungie.net', 0, $ex);
 		}
 		
 	}
@@ -49,7 +60,8 @@ class XboxUser extends PlatformUser {
 			$ppft = $dom->getElementById('i0327')->getAttribute('value');
 		}
 		catch(\Exception $ex){
-			throw new XboxAuthenticationException('Failed to get Microsoft login page', 0, $ex);
+			throw new XboxAuthenticationException(
+					'Failed to get Microsoft login page', 0, $ex);
 		}
 		
 		try{
@@ -62,11 +74,13 @@ class XboxUser extends PlatformUser {
 			]);
 		}
 		catch(\Exception $ex) {
-			throw new XboxAuthenticationException('Failed to POST Microsoft details', 0, $ex);
+			throw new XboxAuthenticationException(
+					'Failed to POST Microsoft details', 0, $ex);
 		}
 		
-		if(!String::startsWith($resp2->getEffectiveUrl(), 'https://login.live.com/ppsecure/')){
-			throw new XboxAuthenticationException('Xbox authentication failed');
+		if(String::startsWith($resp2->getEffectiveUrl(), 'https://login.live.com/ppsecure/')){
+			throw new XboxAuthenticationException(
+					'Xbox authentication failed');
 		}
 		
 	}

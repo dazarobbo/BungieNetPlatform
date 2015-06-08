@@ -1,16 +1,17 @@
 <?php
 
-namespace BungieNetPlatform;
+namespace BungieNetPlatform\Services\User;
 
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7;
-use BungieNetPlatform\Enums;
 use Cola\Json;
+use BungieNetPlatform\Platform;
+use BungieNetPlatform\Enums;
 
 /**
  * UserService
  */
-class UserService extends Service {
+class UserService extends \BungieNetPlatform\Services\Service {
 	
 	const NAME = 'user';
 

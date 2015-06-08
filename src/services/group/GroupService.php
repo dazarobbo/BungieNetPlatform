@@ -1,12 +1,14 @@
 <?php
 
-namespace BungieNetPlatform;
+namespace BungieNetPlatform\Services\Group;
 
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Request;
-use BungieNetPlatform\Enums;
 use Cola\Json;
 use Cola\Functions\Boolean;
+use BungieNetPlatform\Platform;
+use BungieNetPlatform\Enums;
+use BungieNetPlatform\Services\Service;
 
 /**
  * GroupService

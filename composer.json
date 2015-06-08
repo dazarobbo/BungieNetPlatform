@@ -1,7 +1,7 @@
 {
     "name": "dazarobbo/bungie-net-platform",
     "description": "Description of project BungieNetPlatform.",
-	"version": "0.02",
+	"version": "0.1.0",
 	"license": "MIT",
 	"type": "package",
 	"keywords": ["bungie"],

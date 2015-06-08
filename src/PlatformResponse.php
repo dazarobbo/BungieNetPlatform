@@ -7,35 +7,56 @@ use Cola\Json;
 /**
  * Response
  */
-class Response extends \Cola\Object implements \JsonSerializable {
+class PlatformResponse extends \Cola\Object implements \JsonSerializable {
 
+	/**
+	 * @var \stdClass
+	 */
 	protected $_Response;
+	
+	/**
+	 * @var int
+	 */
 	protected $_ErrorCode;
+	
+	/**
+	 * @var int
+	 */
 	protected $_ThrottleSeconds;
+	
+	/**
+	 * @var int
+	 */
 	protected $_ErrorStatus;
+	
+	/**
+	 * @var string
+	 */
 	protected $_Message;
+	
+	/**
+	 * @var \stdClass
+	 */
 	protected $_MessageData;
 
-	public function __construct() {
+	public function __construct(\stdClass $json = null) {
+		
+		if($json !== null){
+			$this->_ErrorCode = $json->ErrorCode;
+			$this->_ErrorStatus = $json->ErrorStatus;
+			$this->_Message = $json->Message;
+			$this->_MessageData = $json->MessageData;
+			$this->_Response = $json->Response;
+			$this->_ThrottleSeconds = $json->ThrottleSeconds;
+		}
 		
 	}
 	
-	public static function parseResponse(\stdClass $json){
-		
-		$self = new static();
-		
-		$self->_ErrorCode = $json->ErrorCode;
-		$self->_ErrorStatus = $json->ErrorStatus;
-		$self->_Message = $json->Message;
-		$self->_MessageData = $json->MessageData;
-		$self->_Response = $json->Response;
-		$self->_ThrottleSeconds = $json->ThrottleSeconds;
-		
-		return $self;
-		
-	}
-	
-	public function getResponse(){
+	/**
+	 * Object response from the application
+	 * @return \stdClass
+	 */
+	public function &getResponse(){
 		return $this->_Response;
 	}
 	
@@ -67,18 +88,16 @@ class Response extends \Cola\Object implements \JsonSerializable {
 	}
 	
 	/**
-	 * 
 	 * @return string
 	 */
-	public function getMessage(){
+	public function &getMessage(){
 		return $this->_Message;
 	}
 	
 	/**
-	 * 
 	 * @return \stdClass
 	 */
-	public function getMessageData(){
+	public function &getMessageData(){
 		return $this->_MessageData;
 	}
 
@@ -91,7 +110,6 @@ class Response extends \Cola\Object implements \JsonSerializable {
 	}
 
 	/**
-	 * 
 	 * @return \static
 	 */
 	public function jsonSerialize() {
@@ -100,8 +118,10 @@ class Response extends \Cola\Object implements \JsonSerializable {
 		
 		//Remove _ prefix
 		foreach($o as $k => $v){
-			unset($o[$k]);
-			$o[\substr($k, 1)] = $v;
+			if(\Cola\Functions\String::startsWith($k, '_')){
+				unset($o[$k]);
+				$o[\substr($k, 1)] = $v;
+			}
 		}
 		
 		return $o;
