@@ -3,9 +3,6 @@
 namespace BungieNetPlatform\Responses;
 
 use BungieNetPlatform\Services\Destiny\DestinyAccount;
-use BungieNetPlatform\Enums\BungieMembershipType;
-use BungieNetPlatform\Services\Destiny\Manifest\Hash;
-use BungieNetPlatform\Services\Destiny\Inventory;
 
 /**
  * DestinyAccountResponse

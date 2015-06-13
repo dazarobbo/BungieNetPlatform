@@ -88,12 +88,9 @@ abstract class Character {
 		$coll = new StatCollection();
 		
 		foreach($json as $name => $obj){
-			
 			$stat = static::parseStat($obj);
 			$stat->Name = $name;
-			
 			$coll[] = $stat;
-			
 		}
 		
 		return $coll;
