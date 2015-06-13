@@ -13,8 +13,12 @@
     ],
 	"autoload": {
 		"psr-4": {
-			"BungieNetPlatform\\": "src/",
-			"Cola\\": "src/cola"
+			"BungieNetPlatform\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"BungieNetPlatform\\Tests\\": "tests/"
 		}
 	},
     "require": {
@@ -22,6 +26,9 @@
         "sunra/php-simple-html-dom-parser": "v1.5.0",
 		"dazarobbo/cola": "dev-master"
     },
+	"require-dev": {
+		"phpunit/phpunit": "4.7.*"
+	},
 	"repositories": [
 		{
 			"type": "vcs",
