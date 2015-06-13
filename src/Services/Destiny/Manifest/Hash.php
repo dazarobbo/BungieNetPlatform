@@ -60,7 +60,7 @@ class Hash extends Object implements IComparable {
 			throw new \RuntimeException('$obj is not a ' . __CLASS__);
 		}
 		
-		return \strcmp($this->_Hash, $obj->_Hash);
+		return Number::compare($this->_Hash, $obj->_Hash);
 		
 	}
 
