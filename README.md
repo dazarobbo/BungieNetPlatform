@@ -1,1 +1,1 @@
- 
+[![Build Status](https://travis-ci.org/dazarobbo/BungieNetPlatform.svg?branch=master)](https://travis-ci.org/dazarobbo/BungieNetPlatform)
