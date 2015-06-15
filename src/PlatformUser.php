@@ -65,7 +65,7 @@ abstract class PlatformUser extends Object {
 	 * @return SetCookie[]
 	 */
 	public function getBungieCookies(){
-		return PHPArray::map($this->_CookieJar->toArray(), function(SetCookie $c){
+		return PHPArray::filter($this->_CookieJar->toArray(), function(SetCookie $c){
 			$c->matchesDomain(BungieNet::DOMAIN);
 		});
 	}

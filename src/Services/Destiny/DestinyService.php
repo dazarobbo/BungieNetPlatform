@@ -53,7 +53,7 @@ class DestinyService extends Service {
 				$destinyMembershipId,
 				$characterId));
 		
-		$request = $req
+		$uri = $request
 				->getUri()
 				->withQuery(\http_build_query([
 					'mode' => (string)$mode,
@@ -61,9 +61,10 @@ class DestinyService extends Service {
 					'page' => $page
 				]));
 		
-		$req = $req->withUri($uri);
+		$request = $request->withUri($uri);
 		
-		return $this->doRequest($request);
+		return new Responses\ActivityHistoryResponse(
+				$this->doRequest($request));
 	}
 	
 	public function getAdvisorsForCurrentCharacter(

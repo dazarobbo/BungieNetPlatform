@@ -23,12 +23,17 @@ class Manifest extends Object implements IComparable {
 	 */
 	protected $_Content;
 	
+	
 	/**
-	 * Version of this manifest
-	 * @return Version
+	 * Compare this manifest to another based on version
+	 * @param Version $obj
+	 * @return int
 	 */
-	public function getVersion(){
-		return $this->_Version;
+	public function compareTo($obj) {
+		return $this->_Version->compareTo($obj->_Version);
+	}
+	
+	protected function __construct(){
 	}
 	
 	/**
@@ -38,7 +43,19 @@ class Manifest extends Object implements IComparable {
 	public function getContent(){
 		return $this->_Content;
 	}
+	
+	/**
+	 * Version of this manifest
+	 * @return Version
+	 */
+	public function getVersion(){
+		return $this->_Version;
+	}
 		
+	/**
+	 * Retrieves the latest manifest from bungie.net
+	 * @return \static
+	 */
 	public static function getLatestManifest(){
 		
 		$client = new \GuzzleHttp\Client(['base_url' => BungieNet::PlatformPath() . '/']);
@@ -52,20 +69,12 @@ class Manifest extends Object implements IComparable {
 		
 	}
 	
-	public function __toString() {
-		return $this->_Version->__toString();
-	}
-
 	/**
-	 * Compare this manifest to another based on version
-	 * @param Version $obj
-	 * @return int
+	 * Returns the version of this manifest
+	 * @return type
 	 */
-	public function compareTo($obj) {
-		return $this->_Version->compareTo($obj->_Version);
-	}
-
-	protected function __construct(){
+	public function __toString() {
+		return (string)$this->_Version;
 	}
 
 }

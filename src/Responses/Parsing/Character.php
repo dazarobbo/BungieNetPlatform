@@ -14,6 +14,11 @@ use BungieNetPlatform\Services\Destiny\PeerView;
 use BungieNetPlatform\Services\Destiny\Equipment;
 use BungieNetPlatform\Services\Destiny\Dye;
 use BungieNetPlatform\Services\Destiny\LevelProgression;
+use BungieNetPlatform\Services\Destiny\ActivityHistoryItem;
+use BungieNetPlatform\Services\Destiny\ActivityHistoryItemDetails;
+use BungieNetPlatform\Services\Destiny\ActivityHistoryItemStat;
+use BungieNetPlatform\Services\Destiny\ActivityHistoryItemStatBasic;
+use BungieNetPlatform\Enums\DestinyActivityModeType;
 use GuzzleHttp\Psr7\Uri;
 
 /**
@@ -169,6 +174,55 @@ abstract class Character {
 		$dye->DyeHash = new Hash($json->dyeHash);
 		
 		return $dye;
+		
+	}
+	
+	public static function parseActivityHistoryItem(\stdClass $json){
+		
+		$item = new ActivityHistoryItem();
+		
+		$item->Period = new \DateTime($json->period);
+		$item->Details = static::parseActivityHistoryItemDetails($json->activityDetails);
+		
+		foreach($json->values as $name => $statObj){
+			$item->Values[$name] = static::parseActivityHistoryStatItem($statObj);
+		}
+		
+		return $item;
+		
+	}
+	
+	public static function parseActivityHistoryItemDetails(\stdClass $json){
+		
+		$details = new ActivityHistoryItemDetails();
+		
+		$details->ReferenceId = $json->referenceId;
+		$details->InstanceId = $json->instanceId;
+		$details->Mode = DestinyActivityModeType::parse($json->mode);
+		
+		return $details;
+		
+	}
+	
+	public static function parseActivityHistoryStatItem(\stdClass $json){
+		
+		$stat = new ActivityHistoryItemStat();
+		
+		$stat->Id = $json->statId;
+		$stat->Basic = static::parseActivityHistoryStatItemBasic($json->basic);
+		
+		return $stat;
+		
+	}
+	
+	public static function parseActivityHistoryStatItemBasic(\stdClass $json){
+		
+		$basic = new ActivityHistoryItemStatBasic();
+		
+		$basic->Value = $json->value;
+		$basic->DisplayValue = $json->displayValue;
+		
+		return $basic;
 		
 	}
 	

@@ -10,7 +10,7 @@ use Cola\Json;
 class PlatformResponse extends \Cola\Object implements \JsonSerializable {
 
 	/**
-	 * @var \stdClass
+	 * @var mixed
 	 */
 	protected $_Response;
 	
@@ -54,7 +54,7 @@ class PlatformResponse extends \Cola\Object implements \JsonSerializable {
 	
 	/**
 	 * Object response from the application
-	 * @return \stdClass
+	 * @return mixed
 	 */
 	public function &getResponse(){
 		return $this->_Response;
