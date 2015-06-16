@@ -6,7 +6,6 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7;
 use Cola\Json;
 use BungieNetPlatform\Platform;
-use BungieNetPlatform\Responses;
 use BungieNetPlatform\Services\Service;
 use BungieNetPlatform\Enums\BungieMembershipType;
 use BungieNetPlatform\Responses\DestinyAccountResponse;

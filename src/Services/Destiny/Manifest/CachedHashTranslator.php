@@ -65,6 +65,8 @@ class CachedHashTranslator extends BasicHashTranslator {
 	 */
 	protected function setCacheItem($hashValue, $content){
 		
+		//If not set to no limit, take 75% of the cache starting
+		//at the end where the most recently added items will be
 		if($this->_CacheSize !== static::NO_LIMIT){
 			if(\count($this->_Cache) >= $this->_CacheSize){
 				$this->_Cache = \array_slice(

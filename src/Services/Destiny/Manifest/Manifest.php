@@ -38,7 +38,7 @@ class Manifest extends Object implements IComparable {
 	
 	/**
 	 * Returns the content of the manifest
-	 * @return stdClass
+	 * @return \stdClass
 	 */
 	public function getContent(){
 		return $this->_Content;
@@ -71,7 +71,7 @@ class Manifest extends Object implements IComparable {
 	
 	/**
 	 * Returns the version of this manifest
-	 * @return type
+	 * @return string
 	 */
 	public function __toString() {
 		return (string)$this->_Version;

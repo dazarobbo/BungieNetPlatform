@@ -101,7 +101,7 @@ class Version extends Object implements IComparable, \ArrayAccess,
 	}
 	
 	public function jsonSerialize() {
-		return (string)this;
+		return (string)$this;
 	}
 	
 	public function offsetExists($offset) {

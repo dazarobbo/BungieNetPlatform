@@ -21,6 +21,7 @@ class Hash extends Object implements IComparable {
 	 */
 	protected static $DefaultHashTranslator = null;
 	
+	
 	/**
 	 * Compares this hash against another
 	 * @param static $obj
@@ -30,7 +31,7 @@ class Hash extends Object implements IComparable {
 	public function compareTo($obj){
 		
 		if(!($obj instanceof static)){
-			throw new \RuntimeException('$obj is not a ' . __CLASS__);
+			throw new \RuntimeException('$obj is not a ' . \get_called_class());
 		}
 		
 		return Number::compare($this->_Hash, $obj->_Hash);

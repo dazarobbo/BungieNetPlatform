@@ -17,6 +17,12 @@ use Cola\Set;
 class BasicHashTranslator extends Object implements IHashTranslator {
 
 	/**
+	 * @var string name of a view of all tables with hash values
+	 * @deprecated
+	 */
+	const VIEW_NAME = 'hash_view';
+	
+	/**
 	 * @var string name of the generated table containing hash values
 	 */
 	const TABLE_NAME = 'hash_table';
