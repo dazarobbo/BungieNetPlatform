@@ -3,11 +3,12 @@
 namespace BungieNetPlatform\Responses;
 
 use BungieNetPlatform\PlatformResponse;
+use Cola\Object;
 
 /**
  * Response
  */
-abstract class Response extends \Cola\Object {
+abstract class Response extends Object {
 
 	/**
 	 * Inner response

@@ -6,9 +6,22 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7;
 use Cola\Json;
 use BungieNetPlatform\Platform;
-use BungieNetPlatform\Enums;
 use BungieNetPlatform\Responses;
 use BungieNetPlatform\Services\Service;
+use BungieNetPlatform\Enums\BungieMembershipType;
+use BungieNetPlatform\Responses\DestinyAccountResponse;
+use BungieNetPlatform\Enums\DestinyActivityModeType;
+use BungieNetPlatform\Responses\ActivityHistoryResponse;
+use BungieNetPlatform\Enums\DestinyClass;
+use BungieNetPlatform\Enums\DestinyItemSubType;
+use BungieNetPlatform\Enums\DestinyExplorerOrderBy;
+use BungieNetPlatform\Enums\TierType;
+use BungieNetPlatform\Enums\DestinyExplorerBuckets;
+use BungieNetPlatform\Enums\DamageType;
+use BungieNetPlatform\Enums\DestinyDefinitionType;
+use BungieNetPlatform\Enums\PeriodType;
+use BungieNetPlatform\Enums\DestinyActivityModeType;
+use BungieNetPlatform\Enums\DestinyStatsGroupType;
 
 /**
  * DestinyService
@@ -24,26 +37,26 @@ class DestinyService extends Service {
 	
 	/**
 	 * 
-	 * @param Enums\BungieMembershipType $membershipType
-	 * @param type $membershipId
-	 * @return Responses\DestinyAccountResponse
+	 * @param BungieMembershipType $membershipType
+	 * @param string|int $membershipId
+	 * @return DestinyAccountResponse
 	 */
 	public function getAccount(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$membershipId){
 		
 		$json = $this->doRequest(new Request('GET', \sprintf(
 				'/%d/account/%s', (string)$membershipType, $membershipId)));
 		
-		return new Responses\DestinyAccountResponse($json);
+		return new DestinyAccountResponse($json);
 		
 	}
 	
 	public function getActivityHistory(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$destinyMembershipId,
 			$characterId,
-			Enums\DestinyActivityModeType $mode,
+			DestinyActivityModeType $mode,
 			$count = 25,
 			$page = 0){
 		
@@ -63,12 +76,12 @@ class DestinyService extends Service {
 		
 		$request = $request->withUri($uri);
 		
-		return new Responses\ActivityHistoryResponse(
+		return new ActivityHistoryResponse(
 				$this->doRequest($request));
 	}
 	
 	public function getAdvisorsForCurrentCharacter(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$characterId){
 		
 		return $this->doRequest(new Request('GET', \sprintf(
@@ -79,7 +92,7 @@ class DestinyService extends Service {
 	}
 	
 	public function getCharacter(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$destinyMembershipId,
 			$characterId){
 		
@@ -92,7 +105,7 @@ class DestinyService extends Service {
 	}
 	
 	public function getCharacterActivities(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$destinyMembershipId,
 			$characterId){
 		
@@ -105,7 +118,7 @@ class DestinyService extends Service {
 	}
 	
 	public function getCharacterInventory(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$destinyMembershipId,
 			$characterId){
 		
@@ -118,7 +131,7 @@ class DestinyService extends Service {
 	}
 	
 	public function getCharacterProgression(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$destinyMembershipId,
 			$characterId){
 		
@@ -131,7 +144,7 @@ class DestinyService extends Service {
 	}
 	
 	public function getCharacterSummary(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$destinyMembershipId,
 			$characterId){
 		
@@ -144,7 +157,7 @@ class DestinyService extends Service {
 	}
 	
 	public function getDestinyAggregateActivityStats(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$destinyMembershipId,
 			$characterId){
 		
@@ -157,14 +170,14 @@ class DestinyService extends Service {
 	}
 	
 	public function getDestinyExplorerItems(
-			Enums\DestinyClass $class,
+			DestinyClass $class,
 			array $destinyItemType,
-			Enums\DestinyItemSubType $subtype,
-			Enums\DestinyExplorerOrderBy $order,
+			DestinyItemSubType $subtype,
+			DestinyExplorerOrderBy $order,
 			$orderStatHash,
 			$direction,
-			Enums\TierType $rarity,
-			Enums\DestinyExplorerBuckets $buckets,
+			TierType $rarity,
+			DestinyExplorerBuckets $buckets,
 			$bucketSortTypes,
 			$weaponPerformance,
 			$count = 10){
@@ -200,7 +213,7 @@ class DestinyService extends Service {
 			$impactEffects,
 			$guardianAttributes,
 			$lightAbilities,
-			Enums\DamageType $damageTypes,
+			DamageType $damageTypes,
 			$page = 0,
 			$count = 10){
 		
@@ -235,7 +248,7 @@ class DestinyService extends Service {
 	}
 	
 	public function getDestinySingleDefinition(
-			Enums\DestinyDefinitionType $definitionType,
+			DestinyDefinitionType $definitionType,
 			$definitionId){
 	
 		return $this->doRequest(new Request('GET', \sprintf(
@@ -246,7 +259,7 @@ class DestinyService extends Service {
 	}
 	
 	public function getExcellenceBadges(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$destinyMembershipId){
 		
 		return $this->doRequest(new Request('GET', \sprintf(
@@ -257,7 +270,7 @@ class DestinyService extends Service {
 	}
 	
 	public function getGrimoireByMembership(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$destinyMembershipId,
 			$flavour,
 			$single){
@@ -285,12 +298,12 @@ class DestinyService extends Service {
 	}
 	
 	public function getHistoricalStats(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$destinyMembershipId,
 			$characterId,
-			Enums\PeriodType $periodType,
-			Enums\DestinyActivityModeType $modes,
-			Enums\DestinyStatsGroupType $groups,
+			PeriodType $periodType,
+			DestinyActivityModeType $modes,
+			DestinyStatsGroupType $groups,
 			$monthStart,
 			$monthEnd,
 			$dayStart,
@@ -325,9 +338,9 @@ class DestinyService extends Service {
 	}
 	
 	public function getHistoricalStatsForAccount(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$destinyMembershipId,
-			Enums\DestinyStatsGroupType $groups){
+			DestinyStatsGroupType $groups){
 		
 		$request = new Request('GET', \sprintf(
 				'/stats/account/%s/%s/',
@@ -347,7 +360,7 @@ class DestinyService extends Service {
 	}
 	
 	public function getItemDetail(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$destinyMembershipType,
 			$characterId,
 			$itemInstanceId){
@@ -362,9 +375,9 @@ class DestinyService extends Service {
 	}
 	
 	public function getLeaderboards(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$destinyMembershipId,
-			Enums\DestinyActivityModeType $modes){
+			DestinyActivityModeType $modes){
 		
 		$request = new Request('GET', \sprintf(
 				'/stats/leaderboards/%s/%s/',
@@ -384,10 +397,10 @@ class DestinyService extends Service {
 	}
 	
 	public function getLeaderboardsForCharacter(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$destinyMembershipId,
 			$characterId,
-			Enums\DestinyActivityModeType $modes){
+			DestinyActivityModeType $modes){
 		
 		$request = new Request('GET', \sprintf(
 				'/stats/leaderboards/%s/%s/%s/',
@@ -408,7 +421,7 @@ class DestinyService extends Service {
 	}
 	
 	public function getLeaderboardsForPsn(
-			Enums\DestinyActivityModeType $modes,
+			DestinyActivityModeType $modes,
 			$code){
 		
 		$request = new Request('GET', '/stats/leaderboardsforpsn/');
@@ -427,7 +440,7 @@ class DestinyService extends Service {
 	}
 	
 	public function getMembershipIdByDisplayName(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$displayName,
 			$ignoreCase = false){
 		
@@ -449,7 +462,7 @@ class DestinyService extends Service {
 	}
 	
 	public function getMyGrimoire(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$flavour,
 			$single){
 		
@@ -492,7 +505,7 @@ class DestinyService extends Service {
 	}
 
 	public function getUniqueWeaponHistory(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$destinyMembershipId,
 			$characterId){
 		
@@ -505,7 +518,7 @@ class DestinyService extends Service {
 	}
 	
 	public function getVault(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$accountId){
 		
 		$request = new Request('GET', \sprintf(
@@ -525,7 +538,7 @@ class DestinyService extends Service {
 	}
 	
 	public function getVendorForCurrentCharacter(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$characterId,
 			$vendorId){
 		
@@ -538,7 +551,7 @@ class DestinyService extends Service {
 	}
 	
 	public function getVendorItemDetailForCurrentCharacter(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$characterId,
 			$vendorId,
 			$itemId){
@@ -553,7 +566,7 @@ class DestinyService extends Service {
 	}
 	
 	public function getVendorSummariesForCurrentCharacter(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$characterId){
 		
 		return $this->doRequest(new Request('GET', \sprintf(
@@ -564,7 +577,7 @@ class DestinyService extends Service {
 	}
 	
 	public function searchDestinyPlayer(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$displayName){
 		
 		return $this->doRequest(new Request('GET', \sprintf(
@@ -575,7 +588,7 @@ class DestinyService extends Service {
 	}
 	
 	public function setLockState(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$characterId,
 			$itemId,
 			$state){
@@ -597,7 +610,7 @@ class DestinyService extends Service {
 	}
 	
 	public function transferItem(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$characterId,
 			$itemReferenceHash,
 			$itemId,

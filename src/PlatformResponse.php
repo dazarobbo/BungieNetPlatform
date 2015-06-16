@@ -3,11 +3,12 @@
 namespace BungieNetPlatform;
 
 use Cola\Json;
+use Cola\Object;
 
 /**
  * Response
  */
-class PlatformResponse extends \Cola\Object implements \JsonSerializable {
+class PlatformResponse extends Object implements \JsonSerializable {
 
 	/**
 	 * @var mixed
@@ -38,6 +39,7 @@ class PlatformResponse extends \Cola\Object implements \JsonSerializable {
 	 * @var \stdClass
 	 */
 	protected $_MessageData;
+	
 
 	public function __construct(\stdClass $json = null) {
 		

@@ -6,12 +6,13 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7;
 use Cola\Json;
 use BungieNetPlatform\Platform;
-use BungieNetPlatform\Enums;
+use BungieNetPlatform\Services\Service;
+use BungieNetPlatform\Enums\BungieMembershipType;
 
 /**
  * UserService
  */
-class UserService extends \BungieNetPlatform\Services\Service {
+class UserService extends Service {
 	
 	const NAME = 'user';
 
@@ -20,41 +21,41 @@ class UserService extends \BungieNetPlatform\Services\Service {
 	}
 	
 	public function getAvailableAvatars(){
-		return $this->doRequest(new Request('GET', '/getavailableavatars'));
+		return $this->doRequest(new Request('GET', '/GetAvailableAvatars'));
 	}
 	
 	public function getAvailableThemes(){
-		return $this->doRequest(new Request('GET', '/getavailablethemes'));
+		return $this->doRequest(new Request('GET', '/GetAvailableThemes'));
 	}
 	
 	public function getBungieAccount(
-			Enums\BungieMembershipType $membershipType,
+			BungieMembershipType $membershipType,
 			$membershipId){
 		
 		return $this->doRequest(new Request('GET', \sprintf(
-				'/getbungieaccount/%s/%s/',
+				'/GetBungieAccount/%s/%s/',
 				(string)$membershipType,
 				$membershipId)));
 		
 	}
 	
 	public function getCountsForCurrentUser(){
-		return $this->doRequest('GET', new Request('/getcounts/'));
+		return $this->doRequest('GET', new Request('/GetCounts/'));
 	}
 
 	public function getCurrentUser(){
-		return $this->doRequest(new Request('GET', '/getbungienetuser'));
+		return $this->doRequest(new Request('GET', '/GetBungieNetUser'));
 	}
 	
 	public function updateNotificationSetting(
 			array $notificationTypes){
 		
-		$request = new Request('POST', '/notification/update/');
+		$request = new Request('POST', '/Notification/Update/');
 				
 		$arr = [];
 		
 		foreach($notificationTypes as $nt){
-			$json[] = (object)[
+			$arr[] = (object)[
 				'notificationType' => $nt->type,
 				'notifyEmail' => $nt->email,
 				'notifyMobile' => $nt->mobile,
@@ -78,7 +79,7 @@ class UserService extends \BungieNetPlatform\Services\Service {
 	public function updateUser(
 			\stdClass $info){
 		
-		$request = new Request('POST', '/updateuser/');
+		$request = new Request('POST', '/UpdateUser/');
 				
 		$json = (object)[
 			'about' => $info->about,

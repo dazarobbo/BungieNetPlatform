@@ -5,9 +5,9 @@ namespace BungieNetPlatform\Services\Forum;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Psr7\Request;
 use Cola\Json;
-use BungieNetPlatform\Enums;
 use BungieNetPlatform\Platform;
 use BungieNetPlatform\Services\Service;
+use BungieNetPlatform\Enums\ForumPostCategory;
 
 /**
  * ForumService
@@ -22,7 +22,7 @@ class ForumService extends Service {
 
 	public function createPost(
 			$body,
-			Enums\ForumPostCategory $category,
+			ForumPostCategory $category,
 			$groupId,
 			$isGroupPrivate,
 			$metadata,

@@ -23,7 +23,7 @@ class DestinyAccountResponse extends Response {
 	}
 	
 	public function __toString() {
-		return $this->Account->MembershipId;
+		return (string)$this->Account->MembershipId;
 	}
 
 }

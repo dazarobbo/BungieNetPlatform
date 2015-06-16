@@ -12,14 +12,14 @@ use BungieNetPlatform\Exceptions;
  * PlatformUser
  */
 abstract class PlatformUser extends Object {
-
+	
 	/**
 	 * Cookies used by the user to make requests to the
 	 * platform
 	 * @var CookieJar
 	 */
 	protected $_CookieJar;
-
+	
 	/**
 	 * Cookies necessary to be considered authorised
 	 * @var string[]
@@ -29,35 +29,37 @@ abstract class PlatformUser extends Object {
 		'bungled',
 		'bungledid'
 	];
-
-	public function __construct() {
-		$this->_CookieJar = new CookieJar();
-	}
+	
 	
 	/**
-	 * Performs authentication with the login provider
+	 * Performs the necessary authentication in order to be
+	 * authorised to use bungie.net in a user context
+	 * @throws Exceptions\AuthenticationException
 	 */
-	protected abstract function authenticateProvider();
-	
+	public function authenticate(){
+		
+		$this->authenticateProvider();
+		$this->authenticateBungie();
+		
+		if(!$this->requiredCookiesExist()){
+			throw new Exceptions\AuthenticationException(
+					'Required bungie.net cookies not set');
+		}
+		
+	}
+
 	/**
 	 * Performs authentication with bungie.net
 	 */
 	protected abstract function authenticateBungie();
 
 	/**
-	 * Checks whether the necessary cookies exist to be
-	 * considered authorised
-	 * @return bool
+	 * Performs authentication with the login provider
 	 */
-	protected function requiredCookiesExist(){
-		
-		$bngCookieNames = PHPArray::map($this->getBungieCookies(),
-				function(SetCookie $c){
-			return $c->getName();
-		});
-		
-		return !\array_diff(static::$_RequiredCookies, $bngCookieNames);
-		
+	protected abstract function authenticateProvider();
+	
+	public function __construct() {
+		$this->_CookieJar = new CookieJar();
 	}
 	
 	/**
@@ -70,6 +72,14 @@ abstract class PlatformUser extends Object {
 		});
 	}
 
+	/**
+	 * Returns a reference to this user's cookie jar
+	 * @return CookieJar
+	 */
+	public function &getCookieJar(){
+		return $this->_CookieJar;
+	}
+	
 	/**
 	 * Gets the CSRF token for this user
 	 * @return string|null
@@ -87,27 +97,19 @@ abstract class PlatformUser extends Object {
 	}
 	
 	/**
-	 * Returns a reference to this user's cookie jar
-	 * @return CookieJar
+	 * Checks whether the necessary cookies exist to be
+	 * considered authorised
+	 * @return bool
 	 */
-	public function &getCookieJar(){
-		return $this->_CookieJar;
-	}
-	
-	/**
-	 * Performs the necessary authentication in order to be
-	 * authorised to use bungie.net in a user context
-	 * @throws Exceptions\AuthenticationException
-	 */
-	public function authenticate(){
+	protected function requiredCookiesExist(){
 		
-		$this->authenticateProvider();
-		$this->authenticateBungie();
+		$bngCookieNames = PHPArray::map($this->getBungieCookies(),
+				function(SetCookie $c){
+					return $c->getName();
+				}
+		);
 		
-		if(!$this->requiredCookiesExist()){
-			throw new Exceptions\AuthenticationException(
-					'Required bungie.net cookies not set');
-		}
+		return !\array_diff(static::$_RequiredCookies, $bngCookieNames);
 		
 	}
 

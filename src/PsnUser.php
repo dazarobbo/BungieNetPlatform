@@ -24,12 +24,12 @@ class PsnUser extends PlatformUser {
 	 */
 	protected $_Password;
 	
+	
 	public function __construct($email, $password) {
 		parent::__construct();
 		$this->_Email = $email;
 		$this->_Password = $password;
 	}
-
 	
 	protected function authenticateBungie() {
 		

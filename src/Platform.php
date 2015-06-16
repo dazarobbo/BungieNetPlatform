@@ -2,15 +2,29 @@
 
 namespace BungieNetPlatform;
 
+use Cola\Object;
 use GuzzleHttp;
-use BungieNetPlatform\Services;
 use BungieNetPlatform\Exceptions;
+use BungieNetPlatform\Services\Destiny\DestinyService;
+use BungieNetPlatform\Services\Forum\ForumService;
+use BungieNetPlatform\Services\Group\GroupService;
+use BungieNetPlatform\Services\User\UserService;
 
 /**
  * Platform
  */
-class Platform extends \Cola\Object {
+class Platform extends Object {
 
+	/**
+	 * @var string
+	 */
+	const API_KEY_HEADER_NAME = 'X-API-Key';
+	
+	/**
+	 * @var string
+	 */
+	const CSRF_HEADER_NAME = 'X-CSRF';
+	
 	/**
 	 * API key used to access the platform
 	 * @var string
@@ -30,36 +44,36 @@ class Platform extends \Cola\Object {
 	protected $_InUserContext = false;
 	
 	/**
-	 * @var Services\Destiny\DestinyService
+	 * @var DestinyService
 	 */
 	public $DestinyService;
 	
 	/**
-	 * @var Services\User\UserService
+	 * @var UserService
 	 */
 	public $UserService;
 	
 	/**
-	 * @var Services\Group\GroupService
+	 * @var GroupService
 	 */
 	public $GroupService;
 	
 	/**
-	 * @var Services\Forum\ForumService
+	 * @var ForumService
 	 */
 	public $ForumService;
-
-
+	
+	
 	public function __construct($key = null) {
 		$this->setKey($key);
-		$this->DestinyService = new Services\Destiny\DestinyService($this);
-		$this->UserService = new Services\User\UserService($this);
-		$this->GroupService = new Services\Group\GroupService($this);
-		$this->ForumService = new Services\Forum\ForumService($this);
+		$this->DestinyService = new DestinyService($this);
+		$this->UserService = new UserService($this);
+		$this->GroupService = new GroupService($this);
+		$this->ForumService = new ForumService($this);
 	}
 	
 	/**
-	 * 
+	 * Makes a requrst to bungie.net given a PSR7 request
 	 * @param \GuzzleHttp\Psr7\Request $request
 	 * @return \GuzzleHttp\Psr7\Response
 	 * @throws PlatformRequestException
@@ -75,11 +89,12 @@ class Platform extends \Cola\Object {
 		
 		if($this->_ApiKey !== null){
 			$request = $request
-					->withHeader('X-API-Key', $this->_ApiKey);
+					->withHeader(static::API_KEY_HEADER_NAME, $this->_ApiKey);
 		}
 		
 		if($this->_InUserContext){
-			$request = $request->withHeader('X-CSRF', $this->_User->getCsrfToken());
+			$request = $request->withHeader(static::CSRF_HEADER_NAME,
+					$this->_User->getCsrfToken());
 			$client->setDefaultOption('cookies', $this->_User->getCookieJar());
 		}
 				
@@ -92,8 +107,8 @@ class Platform extends \Cola\Object {
 		}
 		
 		if($response->getStatusCode() !== 200){
-			throw new Exceptions\PlatformRequestException(
-					\sprintf('Request returned HTTP %d', $response->getStatusCode()),
+			throw new Exceptions\PlatformRequestException(\sprintf(
+					'Request returned HTTP %d', $response->getStatusCode()),
 					$response->getStatusCode());
 		}
 		

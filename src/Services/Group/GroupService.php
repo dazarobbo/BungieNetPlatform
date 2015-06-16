@@ -7,8 +7,8 @@ use GuzzleHttp\Psr7\Request;
 use Cola\Json;
 use Cola\Functions\Boolean;
 use BungieNetPlatform\Platform;
-use BungieNetPlatform\Enums;
 use BungieNetPlatform\Services\Service;
+use BungieNetPlatform\Enums\BungieMembershipType;
 
 /**
  * GroupService
@@ -23,10 +23,10 @@ class GroupService extends Service {
 
 	public function disableClanForGroup(
 			$groupId,
-			Enums\BungieMembershipType $membershipType){
+			BungieMembershipType $membershipType){
 		
 		return $this->doRequest(new Request('POST', \sprintf(
-				'/%s/clans/disable/%s/',
+				'/%s/Clans/Disable/%s/',
 				$groupId,
 				(string)$membershipType)));
 		
@@ -41,7 +41,7 @@ class GroupService extends Service {
 			$tags){
 		
 		$request = new Request('POST', \sprintf(
-				'/%s/editv2/',
+				'/%s/EditV2/',
 				$groupId));
 		
 		$json = (object)[
@@ -61,10 +61,10 @@ class GroupService extends Service {
 	
 	public function enableClanForGroup(
 			$groupId,
-			Enums\BungieMembershipType $membershipType){
+			BungieMembershipType $membershipType){
 		
 		return $this->doRequest(new Request('POST', \sprintf(
-				'/%s/clans/enable/%s/',
+				'/%s/Clans/Enable/%s/',
 				$groupId,
 				(string)$membershipType)));
 		
@@ -74,7 +74,7 @@ class GroupService extends Service {
 			$clanOnly = false,
 			$populateFriends = false){
 		
-		$request = new Request('GET', '/mygroups/all/');
+		$request = new Request('GET', '/MyGroups/All/');
 		
 		$uri = $request
 				->getUri()
@@ -99,7 +99,7 @@ class GroupService extends Service {
 			$nameSearch){
 		
 		$request = new Request('GET', \sprintf(
-				'/%s/membersv3/',
+				'/%s/MembersV3/',
 				$groupId));
 		
 		$uri = $request
