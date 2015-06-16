@@ -22,12 +22,12 @@
 		}
 	},
     "require": {
-		"php": ">=5.4.0",
+		"php": ">=5.5.0",
 		"ext-pcre": "*",
 		"ext-PDO": "*",
 		"ext-SPL": "*",
 		"ext-zip": "*",
-		"guzzlehttp/guzzle": "6.0.1",
+		"guzzlehttp/guzzle": "~6.0",
         "sunra/php-simple-html-dom-parser": "v1.5.0",
 		"dazarobbo/cola": "dev-master"
     },
