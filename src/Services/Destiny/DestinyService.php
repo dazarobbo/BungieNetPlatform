@@ -19,7 +19,6 @@ use BungieNetPlatform\Enums\DestinyExplorerBuckets;
 use BungieNetPlatform\Enums\DamageType;
 use BungieNetPlatform\Enums\DestinyDefinitionType;
 use BungieNetPlatform\Enums\PeriodType;
-use BungieNetPlatform\Enums\DestinyActivityModeType;
 use BungieNetPlatform\Enums\DestinyStatsGroupType;
 
 /**

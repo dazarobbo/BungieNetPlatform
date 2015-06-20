@@ -18,7 +18,14 @@ class CachedHashTranslator extends BasicHashTranslator {
 	const NO_LIMIT = -1;
 	
 	/**
-	 * Cache of items from database indexed by normalised hash value
+	 * Cache of items from database indexed by normalised hash value.
+	 * It is structured as follows.<br><br>
+	 * [
+	 *		'hash value' => [
+	 *			'hash type' => content,
+	 *			'hash type' => content
+	 *		]
+	 * ]
 	 * @var array
 	 */
 	protected $_Cache = [];
@@ -38,20 +45,45 @@ class CachedHashTranslator extends BasicHashTranslator {
 		
 	}
 	
+	protected function getCacheBucket($id){
+		
+		if(isset($this->_Cache[$id])){
+			return $this->_Cache[$id];
+		}
+		
+		return null;
+		
+	}
+	
+	public function getCachedItem(Hash $hash){
+		
+		$bucket = $this->getCacheBucket(\strval($hash));
+		
+		if($bucket !== null){
+			$content = $bucket[$hash->getType()->getValue()];
+			if(isset($content)){
+				return $content;
+			}
+		}
+		
+		return null;
+		
+	}
+	
 	/**
 	 * Retrieves content using local cache or using base method
 	 * to query database
-	 * @param string $hashValue
-	 * @return \Cola\Set
+	 * @param Hash
+	 * @return \stdClass
 	 */
-	public function getContent($hashValue) {
+	public function getContent(Hash $hash) {
 		
-		if(isset($this->_Cache[$hashValue])){
-			return $this->_Cache[$hashValue];
+		if( ($content = $this->getCachedItem($hash) !== null) ){
+			return $content;
 		}
 		
-		$content = parent::getContent($hashValue);
-		$this->setCacheItem($hashValue, $content);
+		$content = parent::getContent($hash);
+		$this->setCacheItem($hash, $content);
 		
 		return $content;
 		
@@ -60,15 +92,15 @@ class CachedHashTranslator extends BasicHashTranslator {
 	/**
 	 * Sets an item in the cache and removes old items when
 	 * necessary
-	 * @param string $hashValue
+	 * @param Hash $hash
 	 * @param \Cola\Set $content
 	 */
-	protected function setCacheItem($hashValue, $content){
+	protected function setCacheItem(Hash $hash, $content){
 		
 		//If not set to no limit, take 75% of the cache starting
 		//at the end where the most recently added items will be
 		if($this->_CacheSize !== static::NO_LIMIT){
-			if(\count($this->_Cache) >= $this->_CacheSize){
+			if(\count($this->_Cache, \COUNT_RECURSIVE) >= $this->_CacheSize){
 				$this->_Cache = \array_slice(
 						$this->_Cache,
 						-$this->_CacheSize,
@@ -77,7 +109,11 @@ class CachedHashTranslator extends BasicHashTranslator {
 			}
 		}
 		
-		$this->_Cache[$hashValue] = $content;
+		if(!isset($this->_Cache[\strval($hash)])){
+			$this->_Cache[\strval($hash)] = array();
+		}
+		
+		$this->_Cache[\strval($hash)][$hash->getType()->getValue()] = $content;
 		
 	}
 	

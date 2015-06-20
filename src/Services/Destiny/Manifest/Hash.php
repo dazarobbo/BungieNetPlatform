@@ -5,6 +5,7 @@ namespace BungieNetPlatform\Services\Destiny\Manifest;
 use Cola\Functions\Number;
 use Cola\Object;
 use Cola\IComparable;
+use BungieNetPlatform\Enums\HashType;
 
 /**
  * Hash
@@ -15,6 +16,11 @@ class Hash extends Object implements IComparable {
 	 * @var string internal hash value
 	 */
 	protected $_Hash = '';
+	
+	/**
+	 * @var HashType
+	 */
+	protected $_Type;
 	
 	/**
 	 * @var IHashTranslator
@@ -38,8 +44,9 @@ class Hash extends Object implements IComparable {
 		
 	}
 	
-	public function __construct($str){
+	public function __construct($str, HashType $type = null){
 		$this->_Hash = $str;
+		$this->_Type = $type;
 	}
 	
 	/**
@@ -51,14 +58,22 @@ class Hash extends Object implements IComparable {
 	public function getContent(IHashTranslator $translator = null){
 		
 		if($translator !== null){
-			return $translator->getContent($this->_Hash);
+			return $translator->getContent($this);
 		}
 		else if(static::$DefaultHashTranslator !== null){
-			return static::$DefaultHashTranslator->getContent($this->_Hash);
+			return static::$DefaultHashTranslator->getContent($this);
 		}
 		
 		throw new \DomainException('No translator defined');
 		
+	}
+	
+	/**
+	 * Type that this hash represents
+	 * @return HashType
+	 */
+	public function getType(){
+		return $this->_Type;
 	}
 	
 	/**

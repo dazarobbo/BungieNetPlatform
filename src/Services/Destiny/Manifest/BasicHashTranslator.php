@@ -6,7 +6,7 @@ use Cola\Functions\PHPArray;
 use Cola\Functions\Number;
 use Cola\Object;
 use Cola\Json;
-use Cola\Set;
+use BungieNetPlatform\Enums\HashTableType;
 
 /**
  * BasicHashTranslator
@@ -34,7 +34,7 @@ class BasicHashTranslator extends Object implements IHashTranslator {
 	
 	public function __construct(ContentDatabase &$database) {
 		$this->_Database = $database;
-		$this->initialise();
+		//$this->initialise();
 	}
 	
 	/**
@@ -96,21 +96,39 @@ class BasicHashTranslator extends Object implements IHashTranslator {
 	
 	/**
 	 * Retrieves database content matching the hash value
-	 * @param string $hashValue
-	 * @return Set each element will be an object
+	 * @param Hash $hash
+	 * @return \stdClass
 	 */
-	public function getContent($hashValue){
-		
+	public function getContent(Hash $hash){
+
 		$stmt = $this->_Database->Connection->prepare(\sprintf(
-				'select json from %s where id = :id;', static::TABLE_NAME));
+				'select json from %s where %s = :query;',
+				$hash->getType()->getTableName(),
+				$hash->getType()->getTableType()->getColumnName()));
 		
-		$stmt->bindValue(':id', $hashValue, \PDO::PARAM_INT);
+		switch($hash->getType()->getTableType()->getValue()){
+			
+			case HashTableType::ID:
+				$stmt->bindValue(':query', $this->normaliseId(\strval($hash)),
+						\PDO::PARAM_INT);
+				break;
+			
+			case HashTableType::KEY:
+				$stmt->bindValue(':query', \strval($hash), \PDO::PARAM_STR);
+				break;
+			
+		}
+		
 		$stmt->execute();
-		$set = Set::fromArray($stmt->fetchAll(\PDO::FETCH_NUM));
 		
-		return $set->map(function($row){
-			return Json::deserialise($row[0]);
-		});
+		if($stmt->columnCount() === 0){
+			return null;
+		}
+		
+		$obj = $stmt->fetch(\PDO::FETCH_NUM);		
+		$obj = Json::deserialise($obj[0]);
+		
+		return $obj;
 		
 	}
 	

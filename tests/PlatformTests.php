@@ -6,6 +6,8 @@ use BungieNetPlatform\Platform;
 use BungieNetPlatform\Enums\BungieMembershipType;
 use BungieNetPlatform\Enums\DestinyActivityModeType;
 
+exit();
+
 /**
  * PlatformTests
  */

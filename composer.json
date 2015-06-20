@@ -1,7 +1,6 @@
 {
     "name": "dazarobbo/bungie-net-platform",
     "description": "Description of project BungieNetPlatform.",
-	"version": "0.1.0",
 	"license": "MIT",
 	"type": "package",
 	"keywords": ["bungie"],
@@ -29,15 +28,9 @@
 		"ext-zip": "*",
 		"guzzlehttp/guzzle": "~6.0",
         "sunra/php-simple-html-dom-parser": "v1.5.0",
-		"dazarobbo/cola": "dev-master"
+		"dazarobbo/cola": "v1.1"
     },
 	"require-dev": {
 		"phpunit/phpunit": "4.7.*"
-	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/dazarobbo/Cola"
-		}
-	]
+	}
 }
