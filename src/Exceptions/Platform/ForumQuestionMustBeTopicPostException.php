@@ -1,0 +1,16 @@
+<?php
+
+namespace BungieNetPlatform\Exceptions\Platform;
+
+use BungieNetPlatform\Exceptions\PlatformException;
+
+/**
+ * ForumQuestionMustBeTopicPost
+ */
+class ForumQuestionMustBeTopicPostException extends PlatformException {
+
+	public function __construct($message, $code = 508, \Exception $previous = null) {
+		parent::__construct($message, $code, $previous);
+	}
+
+}
