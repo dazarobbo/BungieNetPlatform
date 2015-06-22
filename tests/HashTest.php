@@ -31,14 +31,14 @@ class HashTest extends \PHPUnit_Framework_TestCase {
 		
 	}
 	
-	public function testComparison(){
+	public function testEquals(){
 		
 		$h1 = new Hash('23014334875693846598324656075');
 		$h2 = new Hash('23014334875693846598324656074');
 		$h3 = new Hash('23014334875693846598324656074');
 		
-		$this->assertEquals(Number::COMPARISON_GREATER_THAN, $h1->compareTo($h2));
-		$this->assertEquals(Number::COMPARISON_EQUAL, $h2->compareTo($h2));
+		$this->assertTrue($h2->equals($h3));
+		$this->assertFalse($h1->equals($h2));
 		
 	}
 
