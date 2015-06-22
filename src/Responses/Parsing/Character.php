@@ -7,6 +7,7 @@ use BungieNetPlatform\Enums\BungieMembershipType;
 use BungieNetPlatform\Enums\DestinyGender;
 use BungieNetPlatform\Enums\DestinyClass;
 use BungieNetPlatform\Services\Destiny\Manifest\Hash;
+use BungieNetPlatform\Enums\HashType;
 use BungieNetPlatform\Services\Destiny\StatCollection;
 use BungieNetPlatform\Services\Destiny\Stat;
 use BungieNetPlatform\Services\Destiny\Customization;
@@ -34,7 +35,7 @@ abstract class Character {
 		$character->LevelProgression = static::parseLevelProgression($json->levelProgression);
 		$character->EmblemPath = new Uri($json->emblemPath);
 		$character->BackgroundPath = new Uri($json->backgroundPath);
-		$character->EmblemHash = new Hash($json->emblemHash);
+		$character->EmblemHash = new Hash($json->emblemHash); //?
 		$character->CharacterLevel = $json->characterLevel;
 		$character->BaseCharacterLevel = $json->baseCharacterLevel;
 		$character->IsPrestigeLevel = $json->isPrestigeLevel;
@@ -48,14 +49,14 @@ abstract class Character {
 		
 		$lp = new LevelProgression();
 		
-		$lp->DailyProgress = new Hash($json->dailyProgress);
-		$lp->WeeklyProgress = new Hash($json->weeklyProgress);
-		$lp->CurrentProgress = new Hash($json->currentProgress);
+		$lp->DailyProgress = new Hash($json->dailyProgress, HashType::PROGRESSION());
+		$lp->WeeklyProgress = new Hash($json->weeklyProgress, HashType::PROGRESSION());
+		$lp->CurrentProgress = new Hash($json->currentProgress, HashType::PROGRESSION());
 		$lp->Level = $json->level;
 		$lp->Step = $json->step;
 		$lp->ProgressToNextLevel = $json->progressToNextLevel;
 		$lp->NextLevelAt = $json->nextLevelAt;
-		$lp->ProgressionHash = new Hash($json->progressionHash);
+		$lp->ProgressionHash = new Hash($json->progressionHash, HashType::PROGRESSION());
 		
 		return $lp;
 		
@@ -72,17 +73,17 @@ abstract class Character {
 		$base->MinutesPlayedThisSession = \intval($json->minutesPlayedThisSession);
 		$base->MinutesPlayedTotal = \intval($json->minutesPlayedTotal);
 		$base->PowerLevel = $json->powerLevel;
-		$base->RaceHash = new Hash($json->raceHash);
-		$base->GenderHash = new Hash($json->genderHash);
-		$base->ClassHash = new Hash($json->classHash);
-		$base->CurrentActivityHash = new Hash($json->currentActivityHash);
-		$base->LastCompletedStoryHash = new Hash($json->lastCompletedStoryHash);
+		$base->RaceHash = new Hash($json->raceHash, HashType::RACE());
+		$base->GenderHash = new Hash($json->genderHash, HashType::GENDER());
+		$base->ClassHash = new Hash($json->classHash, HashType::CLASS_DEFINITION());
+		$base->CurrentActivityHash = new Hash($json->currentActivityHash, HashType::ACTIVITY());
+		$base->LastCompletedStoryHash = new Hash($json->lastCompletedStoryHash, HashType::ACTIVITY());
 		$base->Stats = static::parseStatCollection($json->stats);
 		$base->GrimoireScore = $json->grimoireScore;
 		$base->PeerView = static::parsePeerView($json->peerView);
 		$base->GenderType = DestinyGender::parse($json->genderType);
 		$base->ClassType = DestinyClass::parse($json->classType);
-		$base->BuildStatGroupHash = new Hash($json->buildStatGroupHash);
+		$base->BuildStatGroupHash = new Hash($json->buildStatGroupHash, HashType::STAT_GROUP());
 		
 		return $base;
 		
@@ -106,7 +107,7 @@ abstract class Character {
 		
 		$stat = new Stat();
 		
-		$stat->Hash = new Hash($json->statHash);
+		$stat->Hash = new Hash($json->statHash, HashType::STAT());
 		$stat->Value = $json->value;
 		$stat->MaximumValue = $json->maximumValue;
 		
@@ -118,14 +119,14 @@ abstract class Character {
 		
 		$custom = new Customization();
 		
-		$custom->Personality = new Hash($json->personality);
-		$custom->Face = new Hash($json->face);
-		$custom->SkinColor = new Hash($json->skinColor);
-		$custom->LipColor = new Hash($json->lipColor);
-		$custom->EyeColor = new Hash($json->eyeColor);
-		$custom->HairColor = new Hash($json->hairColor);
-		$custom->FeatureColor = new Hash($json->featureColor);
-		$custom->DecalColor = new Hash($json->decalColor);
+		$custom->Personality = new Hash($json->personality); //?
+		$custom->Face = new Hash($json->face); //?
+		$custom->SkinColor = new Hash($json->skinColor); //?
+		$custom->LipColor = new Hash($json->lipColor); //?
+		$custom->EyeColor = new Hash($json->eyeColor); //?
+		$custom->HairColor = new Hash($json->hairColor); //?
+		$custom->FeatureColor = new Hash($json->featureColor); //?
+		$custom->DecalColor = new Hash($json->decalColor); //?
 		$custom->WearHelmet = $json->wearHelmet;
 		$custom->HairIndex = $json->hairIndex;
 		$custom->FeatureIndx = $json->featureIndex;
@@ -152,7 +153,7 @@ abstract class Character {
 		foreach($arr as $obj){
 			
 			$equipment = new Equipment();
-			$equipment->Hash = new Hash($obj->itemHash);
+			$equipment->Hash = new Hash($obj->itemHash, HashType::INVENTORY_ITEM());
 			
 			foreach($obj->dyes as $dyeObj){
 				$equipment->Dyes = static::parseDye($dyeObj);
@@ -170,8 +171,8 @@ abstract class Character {
 		
 		$dye = new Dye();
 		
-		$dye->ChannelHash = new Hash($json->channelHash);
-		$dye->DyeHash = new Hash($json->dyeHash);
+		$dye->ChannelHash = new Hash($json->channelHash); //?
+		$dye->DyeHash = new Hash($json->dyeHash); //?
 		
 		return $dye;
 		

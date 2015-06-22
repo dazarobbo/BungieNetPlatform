@@ -4,13 +4,13 @@ namespace BungieNetPlatform\Services\Destiny\Manifest;
 
 use Cola\Functions\Number;
 use Cola\Object;
-use Cola\IComparable;
+use Cola\IEquatable;
 use BungieNetPlatform\Enums\HashType;
 
 /**
  * Hash
  */
-class Hash extends Object implements IComparable {
+class Hash extends Object implements IEquatable {
 
 	/**
 	 * @var string internal hash value
@@ -28,43 +28,43 @@ class Hash extends Object implements IComparable {
 	protected static $DefaultHashTranslator = null;
 	
 	
-	/**
-	 * Compares this hash against another
-	 * @param static $obj
-	 * @return -1, 0, -1 depending on order
-	 * @throws \RuntimeException
-	 */
-	public function compareTo($obj){
-		
-		if(!($obj instanceof static)){
-			throw new \RuntimeException('$obj is not a ' . \get_called_class());
-		}
-		
-		return Number::compare($this->_Hash, $obj->_Hash);
-		
+	public function __construct($str, HashType $type = null){
+		$this->_Hash = \strval($str);
+		$this->_Type = $type;
 	}
 	
-	public function __construct($str, HashType $type = null){
-		$this->_Hash = $str;
-		$this->_Type = $type;
+	/**
+	 * Whether this Hash equals another
+	 * @param self $obj
+	 * @return bool
+	 */
+	public function equals($obj) {
+		
+		if(!($obj instanceof static)){
+			throw new \RuntimeException('Incompatible types');
+		}
+		
+		return $this->_Type === $obj->_Type && $this->_Hash === $obj->_Hash;
+		
 	}
 	
 	/**
 	 * Given an IHashTranslator, returns the content related to this hash value.
 	 * If one is not provided, a previously-set default translator will be tried.
 	 * @param \BungieNetPlatform\Services\Destiny\Manifest\IHashTranslator $translator
-	 * @return \Cola\Set
+	 * @return mixed
 	 */
 	public function getContent(IHashTranslator $translator = null){
 		
-		if($translator !== null){
-			return $translator->getContent($this);
-		}
-		else if(static::$DefaultHashTranslator !== null){
-			return static::$DefaultHashTranslator->getContent($this);
+		$translator = $translator
+				? $translator
+				: static::$DefaultHashTranslator;
+		
+		if($translator === null){
+			throw new \DomainException('No translator defined');
 		}
 		
-		throw new \DomainException('No translator defined');
+		return $translator->getContent($this);
 		
 	}
 	

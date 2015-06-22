@@ -3,11 +3,12 @@
 namespace BungieNetPlatform\Services\Destiny\Manifest;
 
 use BungieNetPlatform\BungieNet;
+use Cola\Object;
 
 /**
  * Content
  */
-class Content {
+class Content extends Object {
 
 	/**
 	 * Language the content is in

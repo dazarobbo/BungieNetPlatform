@@ -31,7 +31,7 @@ class Version extends Object implements IComparable, \ArrayAccess,
 	protected $_Parts;
 	
 	
-	public function clear(callable $predicate = null) {
+	public function clear(\Closure $predicate = null) {
 		$this->initialise();
 	}
 	

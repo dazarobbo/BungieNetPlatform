@@ -28,7 +28,7 @@
 		"ext-zip": "*",
 		"guzzlehttp/guzzle": "~6.0",
         "sunra/php-simple-html-dom-parser": "v1.5.0",
-		"dazarobbo/cola": "v1.1"
+		"dazarobbo/cola": "dev-master"
     },
 	"require-dev": {
 		"phpunit/phpunit": "4.7.*"

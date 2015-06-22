@@ -10,9 +10,21 @@ use Cola\Database\ConnectionParameters;
  */
 class ContentDatabase extends Database {
 
+	/**
+	 * @var string database driver to provide PDO
+	 */
 	const TYPE = 'sqlite';
+	
+	/**
+	 * @var string database charset
+	 */
 	const CHARSET = 'utf8';
 	
+	
+	/**
+	 * Filesystem path to the database
+	 * @var string
+	 */
 	protected $_DbPath;
 	
 	
@@ -25,7 +37,7 @@ class ContentDatabase extends Database {
 		
 		$this->_DbPath = $dbPath;
 		
-		$params;
+		$params = null;
 		
 		if($override === null){
 			$params = new ConnectionParameters(static::TYPE, $dbPath);
@@ -41,10 +53,18 @@ class ContentDatabase extends Database {
 		
 	}
 	
+	/**
+	 * Returns the location of the database
+	 * @return string
+	 */
 	public function getPath(){
 		return $this->_DbPath;
 	}
 	
+	/**
+	 * Queries the database for a list of the tables
+	 * @return string[]
+	 */
 	public function getTableNames(){
 		
 		$stmt = $this->Connection->query(
@@ -57,6 +77,10 @@ class ContentDatabase extends Database {
 		
 	}
 	
+	/**
+	 * Quereies the database for a list of views 
+	 * @return string[]
+	 */
 	public function getViewNames(){
 		
 		$stmt = $this->Connection->query(

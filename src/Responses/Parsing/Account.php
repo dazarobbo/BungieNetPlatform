@@ -14,6 +14,7 @@ use BungieNetPlatform\Enums\DamageType;
 use BungieNetPlatform\Services\Destiny\Node;
 use BungieNetPlatform\Services\Destiny\Perk;
 use BungieNetPlatform\Enums\ItemLocation;
+use BungieNetPlatform\Enums\HashType;
 use GuzzleHttp\Psr7\Uri;
 
 /**
@@ -63,7 +64,7 @@ abstract class Account {
 		
 		$bi = new BucketItem();
 		
-		$bi->Hash = new Hash($json->bucketHash);
+		$bi->Hash = new Hash($json->bucketHash, HashType::INVENTORY_BUCKET());
 		
 		foreach($json->items as $item){
 			$bi->Items[] = static::parseItem($item);
@@ -77,7 +78,7 @@ abstract class Account {
 		
 		$item = new Item();
 		
-		$item->Hash = new Hash($json->itemHash);
+		$item->Hash = new Hash($json->itemHash, HashType::INVENTORY_ITEM());
 		$item->BindStatus = ItemBindStatus::parse($json->bindStatus);
 		$item->IsEquipped = $json->isEquipped;
 		$item->InstanceId = $json->itemInstanceId;
@@ -92,13 +93,16 @@ abstract class Account {
 		$item->PrimaryStat = Character::parseStat($json->primaryStat);
 		$item->CanEquip = $json->canEquip;
 		$item->EquipRequiredLevel = $json->equipRequiredLevel;
-		$item->UnlockFlagHashRequiredToEquip = new Hash($json->unlockFlagHashRequiredToEquip);
+		$item->UnlockFlagHashRequiredToEquip = new Hash(
+				$json->unlockFlagHashRequiredToEquip,
+				HashType::UNLOCK_FLAG());
 		$item->CannotEquipReason = EquipFailureReason::parse($json->cannotEquipReason);
 		$item->DamageType = DamageType::parse($json->damageType);
 		$item->DamageTypeNodeIndex = $json->damageTypeNodeIndex;
 		$item->DamageTypeStepIndex = $json->damageTypeStepIndex;
 		$item->Progression = Character::parseLevelProgression($json->progression);
-		$item->TalentGridHash = new Hash($json->talentGridHash);
+		$item->TalentGridHash = new Hash($json->talentGridHash,
+				HashType::TALENT_GRID());
 		
 		foreach($json->nodes as $obj){
 			$item->Nodes[] = static::parseNode($obj);
@@ -131,7 +135,7 @@ abstract class Account {
 		$perk = new Perk();
 		
 		$perk->IconPath = new Uri($json->iconPath);
-		$perk->Hash = new Hash($json->perkHash);
+		$perk->Hash = new Hash($json->perkHash, HashType::SANDBOX_PERK());
 		$perk->IsActive = $json->isActive;
 		
 		return $perk;
@@ -146,7 +150,7 @@ abstract class Account {
 		$node->StepIndex = $json->stepIndex;
 		$node->State = $json->state;
 		$node->Hidden = $json->hidden;
-		$node->Hash = new Hash($json->nodeHash);
+		$node->Hash = new Hash($json->nodeHash); //?
 		
 		return $node;
 		

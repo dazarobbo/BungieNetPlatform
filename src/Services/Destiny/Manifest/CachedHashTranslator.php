@@ -78,7 +78,7 @@ class CachedHashTranslator extends BasicHashTranslator {
 	 */
 	public function getContent(Hash $hash) {
 		
-		if( ($content = $this->getCachedItem($hash) !== null) ){
+		if(($content = $this->getCachedItem($hash)) !== null){
 			return $content;
 		}
 		
@@ -109,6 +109,7 @@ class CachedHashTranslator extends BasicHashTranslator {
 			}
 		}
 		
+		//Set a bucket if it doesn't exist
 		if(!isset($this->_Cache[\strval($hash)])){
 			$this->_Cache[\strval($hash)] = array();
 		}

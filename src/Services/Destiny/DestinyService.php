@@ -44,7 +44,7 @@ class DestinyService extends Service {
 			$membershipId){
 		
 		$json = $this->doRequest(new Request('GET', \sprintf(
-				'/%d/account/%s', (string)$membershipType, $membershipId)));
+				'/%s/Account/%s', (string)$membershipType, $membershipId)));
 		
 		return new DestinyAccountResponse($json);
 		
@@ -59,7 +59,7 @@ class DestinyService extends Service {
 			$page = 0){
 		
 		$request = new Request('GET', \sprintf(
-				'/stats/activityhistory/%s/%s/%s',
+				'/Stats/ActivityHistory/%s/%s/%s',
 				(string)$membershipType,
 				$destinyMembershipId,
 				$characterId));
@@ -74,8 +74,10 @@ class DestinyService extends Service {
 		
 		$request = $request->withUri($uri);
 		
-		return new ActivityHistoryResponse(
-				$this->doRequest($request));
+		$json = $this->doRequest($request);
+		
+		return new ActivityHistoryResponse($json);
+		
 	}
 	
 	public function getAdvisorsForCurrentCharacter(

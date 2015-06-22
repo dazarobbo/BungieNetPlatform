@@ -2,6 +2,8 @@
 
 namespace BungieNetPlatform;
 
+use GuzzleHttp\Psr7\Uri;
+
 /**
  * BungieNet
  */
@@ -16,6 +18,17 @@ abstract class BungieNet{
 	 */
 	public static function base(){
 		return \sprintf('%s://%s', static::PROTOCOL, static::host());
+	}
+	
+	/**
+	 * Generates a base URI for bungie.net
+	 * @return Uri
+	 */
+	public static function getBaseUri(){
+		return Uri::fromParts([
+			'scheme' => static::PROTOCOL,
+			'host' => static::host()
+		]);
 	}
 	
 	/**
