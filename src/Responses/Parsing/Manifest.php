@@ -6,7 +6,6 @@ use BungieNetPlatform\Services\Destiny\ActivityBundle;
 use BungieNetPlatform\Services\Destiny\Manifest\Hash;
 use BungieNetPlatform\Enums\HashType;
 use Cola\Functions\Object;
-use GuzzleHttp\Psr7\Uri;
 use BungieNetPlatform\BungieNet;
 use BungieNetPlatform\Services\Destiny\ClassDefinition;
 use BungieNetPlatform\Enums\DestinyClass;
@@ -17,10 +16,7 @@ use BungieNetPlatform\Enums\DestinyClass;
 abstract class Manifest {
 
 	public static function parseActivityBundle(\stdClass $json){
-		
-		//bundleHash,								  icon,releaseIcon,releaseTime,destinationHash,placeHash,activityTypeHash,activityHashes
-		//bundleHash,activityName,activityDescription,icon,releaseIcon,releaseTime,destinationHash,placeHash,activityTypeHash,activityHashes
-		
+
 		$av = new ActivityBundle();
 		
 		$av->Hash = new Hash($json->bundleHash, HashType::ACTIVITY_BUNDLE());
@@ -40,7 +36,7 @@ abstract class Manifest {
 		$av->ActivityTypeHash = new Hash($json->activityTypeHash, HashType::ACTIVITY_TYPE());
 		
 		foreach($json->activityHashes as $ah){
-			$av->ActivityHashes[] = new Hash($ah, HashType::ACTIVITY());
+			$av->ActivityHashes->add(new Hash($ah, HashType::ACTIVITY()));
 		}
 		
 		return $av;

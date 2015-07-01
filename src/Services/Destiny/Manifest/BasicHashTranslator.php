@@ -7,14 +7,30 @@ use Cola\Object;
 use Cola\Json;
 use BungieNetPlatform\Enums\HashTableType;
 use BungieNetPlatform\Enums\HashType;
-use BungieNetPlatform\Services\Destiny\ActivityBundle;
 use BungieNetPlatform\Responses\Parsing\Manifest as ManifestParsing;
 
 /**
  * BasicHashTranslator
  * 
  * Given a hash value this translator will return matching
- * objects from a database
+ * objects directly from a database
+ * 
+ * $db = new ContentDatabase(...);
+ * $translator = new BasicHashTranslator($db);
+ * $hash = new Hash(...);
+ * $content = $hash->getContent($translator);
+ * 
+ * //Alternatively...
+ * $db = new ContentDatabase(...);
+ * Hash::setDefaultTranslator(new BasicHashTranslator($db));
+ * $hash = new Hash(...);
+ * $content = $hash->getContent();
+ * $content2 = $hash2->getContent();
+ * //etc...
+ * 
+ * @author dazarobbo <dazarobbo@live.com>
+ * @since version 1.0.0
+ * @version 1.0.0
  */
 class BasicHashTranslator extends Object implements IHashTranslator {
 
@@ -39,10 +55,11 @@ class BasicHashTranslator extends Object implements IHashTranslator {
 				$hash->getType()->getTableName(),
 				$hash->getType()->getTableType()->getColumnName()));
 		
+		//Make distinction between numeric and alphabetic hashes
 		switch($hash->getType()->getTableType()->getValue()){
 			
 			case HashTableType::ID:
-				$stmt->bindValue(':query', static::normaliseId(\strval($hash)),
+				$stmt->bindValue(':query', static::normaliseId((string)$hash),
 						\PDO::PARAM_INT);
 				break;
 			

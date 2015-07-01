@@ -4,6 +4,7 @@ namespace BungieNetPlatform\Services\Destiny\Manifest;
 
 use BungieNetPlatform\BungieNet;
 use Cola\Object;
+use GuzzleHttp\Client as GuzzleClient;
 
 /**
  * Content
@@ -35,11 +36,16 @@ class Content extends Object {
 	/**
 	 * Downloads and uncompresses the database file
 	 * @return string Temp file location of database file
+	 * @todo change _Path to be a Uri pointing to bungie.net
 	 */
 	public function downloadDatabase(){
 		
+		throw new \Cola\Exceptions\DeprecatedException(__METHOD__);
+		
 		//Download
-		$client = new \GuzzleHttp\Client(['base_url' => BungieNet::PlatformPath() . '/']);
+		$client = new \GuzzleHttp\Client([
+			'base_url' => BungieNet::PlatformPath() . '/'
+		]);
 		$r = $client->get($this->_Path);
 		
 		//Put response in temp file

@@ -5,11 +5,18 @@ namespace BungieNetPlatform;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Cookie\SetCookie;
 use Cola\Object;
-use Cola\Functions\PHPArray;
+use Cola\ArrayList;
+use Cola\Functions\String as StringFunctions;
 use BungieNetPlatform\Exceptions;
 
 /**
  * PlatformUser
+ * 
+ * Base class for any specific user type
+ * 
+ * @since version 1.0.0
+ * @version 1.0.0
+ * @author dazarobbo <dazarobbo@live.com>
  */
 abstract class PlatformUser extends Object {
 	
@@ -24,11 +31,11 @@ abstract class PlatformUser extends Object {
 	 * Cookies necessary to be considered authorised
 	 * @var string[]
 	 */
-	protected static $_RequiredCookies = [
-		'bungleatk',
+	protected static $_RequiredCookies = array(
 		'bungled',
-		'bungledid'
-	];
+		'bungledid',
+		'bungleme'
+	);
 	
 	
 	/**
@@ -36,27 +43,7 @@ abstract class PlatformUser extends Object {
 	 * authorised to use bungie.net in a user context
 	 * @throws Exceptions\AuthenticationException
 	 */
-	public function authenticate(){
-		
-		$this->authenticateProvider();
-		$this->authenticateBungie();
-		
-		if(!$this->requiredCookiesExist()){
-			throw new Exceptions\AuthenticationException(
-					'Required bungie.net cookies not set');
-		}
-		
-	}
-
-	/**
-	 * Performs authentication with bungie.net
-	 */
-	protected abstract function authenticateBungie();
-
-	/**
-	 * Performs authentication with the login provider
-	 */
-	protected abstract function authenticateProvider();
+	public abstract function authenticate();
 	
 	public function __construct() {
 		$this->_CookieJar = new CookieJar();
@@ -64,11 +51,17 @@ abstract class PlatformUser extends Object {
 	
 	/**
 	 * Returns the bungie.net cookies for this user
-	 * @return SetCookie[]
+	 * @return ArrayList|SetCookie[]
 	 */
 	public function getBungieCookies(){
-		return PHPArray::filter($this->_CookieJar->toArray(), function(SetCookie $c){
-			$c->matchesDomain(BungieNet::DOMAIN);
+		return $this->getCookies()->filter(function(SetCookie $c){
+
+			if($c->isExpired()){
+				return false;
+			}
+			
+			return StringFunctions::endsWith($c->getDomain(), BungieNet::DOMAIN);
+			
 		});
 	}
 
@@ -81,19 +74,40 @@ abstract class PlatformUser extends Object {
 	}
 	
 	/**
+	 * Returns the cookies as SetCookie instances
+	 * @return ArrayList|SetCookie[]
+	 */
+	public function getCookies(){
+	
+		$list = new ArrayList($this->_CookieJar->toArray());
+		$list = $list->map(function(array $arr){
+			return new SetCookie($arr);
+		});
+		
+		return $list;
+		
+	}
+	
+	/**
 	 * Gets the CSRF token for this user
 	 * @return string|null
 	 */
 	public function getCsrfToken(){
 		
-		foreach($this->getBungieCookies() as $cookie){
-			if($cookie->getName() === 'bungled'){
-				return $cookie->getValue();
-			}
-		}
+		$list = $this->getBungieCookies()->filter(function(SetCookie $c){
+			return $c->getName() === 'bungled';
+		});
 		
-		return null;
+		return !$list->isEmpty() ? $list->front()->getValue() : null;
 		
+	}
+	
+	/**
+	 * Checks whether this user can be used to make requests
+	 * @return bool
+	 */
+	public function isAuthorised(){
+		return $this->requiredCookiesExist();
 	}
 	
 	/**
@@ -103,13 +117,11 @@ abstract class PlatformUser extends Object {
 	 */
 	protected function requiredCookiesExist(){
 		
-		$bngCookieNames = PHPArray::map($this->getBungieCookies(),
-				function(SetCookie $c){
-					return $c->getName();
-				}
-		);
-		
-		return !\array_diff(static::$_RequiredCookies, $bngCookieNames);
+		$names = $this->getBungieCookies()
+				->map(function(SetCookie $c){ return $c->getName(); })
+				->toArray();
+				
+		return !\array_diff(static::$_RequiredCookies, $names);
 		
 	}
 

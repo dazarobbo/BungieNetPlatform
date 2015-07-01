@@ -2,13 +2,22 @@
 
 namespace BungieNetPlatform\Services;
 
-use BungieNetPlatform\BungieNet;
-use BungieNetPlatform\Platform;
 use Cola\Json;
 use Cola\Object;
+use BungieNetPlatform\BungieNet;
+use BungieNetPlatform\Platform;
+use BungieNetPlatform\PlatformResponse;
+use BungieNetPlatform\Exceptions\PlatformException;
+use GuzzleHttp\Psr7\Request as PsrRequest;
 
 /**
  * Service
+ * 
+ * Base class for any specific service types (ie. User, Destiny, etc...)
+ * 
+ * @since version 1.0.0
+ * @version 1.0.0
+ * @author dazarobbo <dazarobbo@live.com>
  */
 abstract class Service extends Object {
 
@@ -30,31 +39,43 @@ abstract class Service extends Object {
 	
 	/**
 	 * Initiates a request to the bungie.net platform according to this
-	 * service.
-	 * @param \GuzzleHttp\Psr7\Request $request
-	 * @return \stdClass $json object
+	 * service. The request should have only a partial path in the 
+	 * following format /Platform{request path}
+	 * @param PsrRequest $psrRequest
+	 * @return PlatformResponse
 	 */
-	protected function doRequest(\GuzzleHttp\Psr7\Request $request){
+	protected function doRequest(PsrRequest $psrRequest){
 		
-		$uri = $request
-				->getUri()
-				->withPath(
-						BungieNet::platformPath() . '/' .
-						$this->_Name .
-						$request->getUri()->getPath());
-					
-		$request = $request->withUri($uri);
+		//Append the platform segment to the partial request path
+		$uri = BungieNet::getPlatformUri();
+		$uri = $uri->withPath($uri->getPath() . '/' . $this->_Name .
+				$psrRequest->getUri()->getPath());
 		
-		$response = $this->_Platform->doRequest($request);
+		$psrRequest = $psrRequest->withUri($uri);
+		
+		$psrResponse = $this->_Platform->httpRequest($psrRequest);
 		
 		$json = Json::deserialise(
-				$response->getBody()->getContents(),
+				$psrResponse->getBody()->getContents(),
 				false,
 				Json::DEFAULT_INPUT_DEPTH,
 				\JSON_BIGINT_AS_STRING
 		);
 		
-		return $json;
+		//Check for bad JSON
+		if(Json::lastError() !== \JSON_ERROR_NONE){
+			throw new PlatformException('Failed to parse JSON');
+		}
+		
+		$response = new PlatformResponse($json);
+		
+		//Check for exceptions from the platform and throw it locally
+		if(($ex = Platform::getResponseException($response)) !== null){
+			$ex->Response = $response;
+			throw $ex;
+		}
+		
+		return $response;
 		
 	}
 	

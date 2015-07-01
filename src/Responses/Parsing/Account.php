@@ -16,6 +16,7 @@ use BungieNetPlatform\Services\Destiny\Perk;
 use BungieNetPlatform\Enums\ItemLocation;
 use BungieNetPlatform\Enums\HashType;
 use GuzzleHttp\Psr7\Uri;
+use Cola\Set;
 
 /**
  * Account
@@ -30,7 +31,7 @@ abstract class Account {
 		$acc->MembershipType = BungieMembershipType::parse($json->membershipType);
 		
 		foreach($json->characters as $char){
-			$acc->Characters[] = Character::parseCharacter($char);
+			$acc->Characters->add(Character::parseCharacter($char));
 		}
 		
 		$acc->ClanName = $json->clanName;
@@ -48,10 +49,10 @@ abstract class Account {
 		
 		foreach($json->buckets as $name => $bucket){
 			
-			$iv->Buckets[$name] = new \Cola\Set();
+			$iv->Buckets[$name] = new Set();
 			
 			foreach($bucket as $item){
-				$iv->Buckets[$name][] = static::parseBucketItem($item);
+				$iv->Buckets[$name]->add(static::parseBucketItem($item));
 			}
 			
 		}
@@ -67,7 +68,7 @@ abstract class Account {
 		$bi->Hash = new Hash($json->bucketHash, HashType::INVENTORY_BUCKET());
 		
 		foreach($json->items as $item){
-			$bi->Items[] = static::parseItem($item);
+			$bi->Items->add(static::parseItem($item));
 		}
 		
 		return $bi;
@@ -87,7 +88,7 @@ abstract class Account {
 		$item->QualityLevel = $json->qualityLevel;
 		
 		foreach($json->stats as $obj){
-			$item->Stats[] = Character::parseStat($obj);
+			$item->Stats->add(Character::parseStat($obj));
 		}
 
 		$item->PrimaryStat = Character::parseStat($json->primaryStat);
@@ -105,7 +106,7 @@ abstract class Account {
 				HashType::TALENT_GRID());
 		
 		foreach($json->nodes as $obj){
-			$item->Nodes[] = static::parseNode($obj);
+			$item->Nodes->add(static::parseNode($obj));
 		}
 		
 		$item->UseCustomDyes = $json->useCustomDyes;
@@ -118,7 +119,7 @@ abstract class Account {
 		$item->IsGridComplete = $json->isGridComplete;
 		
 		foreach($json->perks as $obj){
-			$item->Perks[] = static::parsePerk($obj);
+			$item->Perks->add(static::parsePerk($obj));
 		}
 		
 		$item->Location = ItemLocation::parse($json->location);

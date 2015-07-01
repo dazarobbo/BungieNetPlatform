@@ -2,13 +2,18 @@
 
 namespace BungieNetPlatform;
 
-use Cola\Json;
 use Cola\Object;
 
 /**
  * Response
+ * 
+ * Represents base response from the bungie.net platform
+ * 
+ * @since version 1.0.0
+ * @version 1.0.0
+ * @author dazarobbo <dazarobbo@live.com>
  */
-class PlatformResponse extends Object implements \JsonSerializable {
+class PlatformResponse extends Object {
 
 	/**
 	 * @var mixed
@@ -48,7 +53,9 @@ class PlatformResponse extends Object implements \JsonSerializable {
 			$this->_ErrorStatus = $json->ErrorStatus;
 			$this->_Message = $json->Message;
 			$this->_MessageData = $json->MessageData;
-			$this->_Response = $json->Response;
+			$this->_Response = \Cola\Functions\Object::propertiesExist($json, 'Response')
+					? $json->Response
+					: null;
 			$this->_ThrottleSeconds = $json->ThrottleSeconds;
 		}
 		
@@ -92,7 +99,7 @@ class PlatformResponse extends Object implements \JsonSerializable {
 	/**
 	 * @return string
 	 */
-	public function &getMessage(){
+	public function getMessage(){
 		return $this->_Message;
 	}
 	
@@ -104,30 +111,10 @@ class PlatformResponse extends Object implements \JsonSerializable {
 	}
 
 	/**
-	 * See jsonSerialize
 	 * @return string
 	 */
 	public function __toString() {
-		return Json::serialise($this); 
+		return $this->_Message;
 	}
-
-	/**
-	 * @return \static
-	 */
-	public function jsonSerialize() {
-				
-		$o = \get_object_vars($this);
-		
-		//Remove _ prefix
-		foreach($o as $k => $v){
-			if(\Cola\Functions\String::startsWith($k, '_')){
-				unset($o[$k]);
-				$o[\substr($k, 1)] = $v;
-			}
-		}
-		
-		return $o;
-		
-	}
-
+	
 }

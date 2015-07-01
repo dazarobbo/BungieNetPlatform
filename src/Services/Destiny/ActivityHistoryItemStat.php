@@ -7,6 +7,9 @@ namespace BungieNetPlatform\Services\Destiny;
  */
 class ActivityHistoryItemStat extends \Cola\Object {
 
+	/**
+	 * @var string
+	 */
 	public $Id;
 	
 	/**
@@ -15,7 +18,6 @@ class ActivityHistoryItemStat extends \Cola\Object {
 	public $Basic;
 	
 	public function __construct() {
-		
 	}
 	
 	public function __toString() {

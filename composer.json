@@ -26,7 +26,7 @@
 		"ext-PDO": "*",
 		"ext-SPL": "*",
 		"ext-zip": "*",
-		"guzzlehttp/guzzle": "~6.0",
+		"guzzlehttp/guzzle": "dev-master",
         "sunra/php-simple-html-dom-parser": "v1.5.0",
 		"dazarobbo/cola": "dev-master"
     },

@@ -6,53 +6,42 @@ use GuzzleHttp\Psr7\Uri;
 
 /**
  * BungieNet
+ * 
+ * @since version 1.0.0
+ * @version 1.0.0
+ * @author dazarobbo <dazarobbo@live.com>
  */
 abstract class BungieNet{
 
 	const PROTOCOL = 'https';
 	const DOMAIN = 'bungie.net';
+	const HOST = 'www.' . self::DOMAIN;
 
 	/**
-	 * Returns the base URL for bungie.net without a path
-	 * @return string
-	 */
-	public static function base(){
-		return \sprintf('%s://%s', static::PROTOCOL, static::host());
-	}
-	
-	/**
 	 * Generates a base URI for bungie.net
+	 * 
+	 * @since version 1.0.0
+	 * @version 1.0.0
+	 * @author dazarobbo <dazarobbo@live.com>
 	 * @return Uri
 	 */
 	public static function getBaseUri(){
 		return Uri::fromParts([
 			'scheme' => static::PROTOCOL,
-			'host' => static::host()
+			'host' => static::HOST
 		]);
 	}
 	
 	/**
-	 * Returns the full URL to the bungie.net platform
-	 * @return string
+	 * Generates a URI to the Platform
+	 * 
+	 * @return Uri
+	 * @since version 1.0.0
+	 * @version 1.0.0
+	 * @author dazarobbo <dazarobbo@live.com>
 	 */
-	public static function fullPlatformPath(){
-		return \sprintf('%s%s', static::base(), static::platformPath());
-	}
-	
-	/**
-	 * Returns bungie.net's hostname
-	 * @return string
-	 */
-	public static function host(){
-		return \sprintf('www.%s', static::DOMAIN);
-	}
-
-	/**
-	 * Returns only the path to the bungie.net platform
-	 * @return string
-	 */
-	public static function platformPath(){
-		return '/platform';
+	public static function getPlatformUri(){
+		return static::getBaseUri()->withPath('/Platform');
 	}
 	
 }

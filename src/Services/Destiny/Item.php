@@ -2,6 +2,9 @@
 
 namespace BungieNetPlatform\Services\Destiny;
 
+use Cola\ArrayList;
+use Cola\Set;
+
 /**
  * Item
  */
@@ -98,7 +101,7 @@ class Item extends \Cola\Object {
 	public $TalentGridHash;
 	
 	/**
-	 * @var \Cola\Set
+	 * @var ArrayList
 	 */
 	public $Nodes;
 	
@@ -108,7 +111,7 @@ class Item extends \Cola\Object {
 	public $UseCustomDyes;
 	
 	/**
-	 * @var \Cola\Set
+	 * @var Set
 	 */
 	public $ArtRegions;
 	
@@ -123,7 +126,7 @@ class Item extends \Cola\Object {
 	public $IsGridComplete;
 	
 	/**
-	 * @var \Cola\Set
+	 * @var ArrayList
 	 */
 	public $Perks;
 	
@@ -149,9 +152,9 @@ class Item extends \Cola\Object {
 	
 	public function __construct() {
 		$this->Stats = new StatCollection();
-		$this->Nodes = new \Cola\Set();
-		$this->ArtRegions = new \Cola\Set();
-		$this->Perks = new \Cola\Set();
+		$this->Nodes = new ArrayList();
+		$this->ArtRegions = new Set();
+		$this->Perks = new ArrayList();
 	}
 
 }

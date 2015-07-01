@@ -3,13 +3,23 @@
 namespace BungieNetPlatform;
 
 use GuzzleHttp;
-use Cola\Functions\String;
+use Cola\Functions\String as StringFunctions;
 use Sunra\PhpSimple\HtmlDomParser;
 use BungieNetPlatform\Exceptions\BungieAuthenticationException;
 use BungieNetPlatform\Exceptions\XboxAuthenticationException;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\TransferException;
+use GuzzleHttp\Psr7\Uri;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * XboxUser
+ * 
+ * @since version 1.0.0
+ * @version 1.0.0
+ * @author dazarobbo <dazarobbo@live.com>
  */
 class XboxUser extends PlatformUser {
 
@@ -31,41 +41,62 @@ class XboxUser extends PlatformUser {
 		$this->_Password = $password;
 	}
 
-	protected function authenticateBungie() {
+	public function authenticate() {
 		
-		$client = new GuzzleHttp\Client([
-			'cookies' => $this->_CookieJar
+		//Hacky workaround for getting redirect URI from Guzzle
+		/** @var Uri */
+		$uri = new Uri();
+		$handler = HandlerStack::create();
+		$handler->push(Middleware::mapRequest(function(RequestInterface $request) use (&$uri){
+			$uri = $request->getUri();
+			return $request;
+		}));
+		
+		$client = new GuzzleClient([
+			'handler' => $handler,
+			'base_uri' => 'https://login.live.com',
+			'cookies' => $this->_CookieJar,
+			'decode_content' => 'gzip',
+			'debug' => true,
 		]);
 		
 		try{
-			$client->get('https://www.bungie.net/en/User/SignIn/Xuid');
+			$resp = $client->get('/oauth20_authorize.srf', [
+				'query' => [
+					'client_id' => '000000004013231D',
+					'scope' => 'Xboxlive.signin Xboxlive.offline_access',
+					'response_type' => 'code',
+					'redirect_uri' => 'https://www.bungie.net/en/User/SignIn/Xuid',
+					'display' => 'touch',
+					'locale' => 'en'
+				]
+			]);
 		}
-		catch(\Exception $ex){
-			throw new BungieAuthenticationException(
-					'Failed to connect to bungie.net', 0, $ex);
-		}
-		
-	}
-
-	protected function authenticateProvider() {
-		
-		$client = new GuzzleHttp\Client([
-			'base_url' => 'https://login.live.com/ppsecure/',
-			'cookies' => $this->_CookieJar
-		]);
-		
-		try{
-			$resp1 = $client->get('post.srf');
-			$dom = HtmlDomParser::str_get_html($resp1->getBody());
-			$ppft = $dom->getElementById('i0327')->getAttribute('value');
-		}
-		catch(\Exception $ex){
+		catch(TransferException $ex){
 			throw new XboxAuthenticationException(
 					'Failed to get Microsoft login page', 0, $ex);
 		}
 		
+		if(\stripos($resp->getBody(), '#idDiv_AppSection') !== false){
+			//Asking for app auth
+			throw new XboxAuthenticationException('Requires app authorisation');
+		}
+		
+		$matches = array();
+		\preg_match('/(<input .*?name="PPFT".*?\/>)/usi', $resp->getBody(), $matches);
+		$dom = HtmlDomParser::str_get_html($matches[1]);
+		$ppft = $dom->getElementById('i0327')->getAttribute('value');
+		
 		try{
-			$resp2 = $client->post('post.srf', [
+			$resp = $client->post('/ppsecure/post.srf', [
+				'query' => [
+					'client_id' => '000000004013231D',
+					'scope' => 'Xboxlive.signin Xboxlive.offline_access',
+					'response_type' => 'code',
+					'redirect_uri' => 'https://www.bungie.net/en/User/SignIn/Xuid',
+					'display' => 'touch',
+					'locale' => 'en'
+				],
 				'form_params' => [
 					'login' => $this->_Email,
 					'passwd' => $this->_Password,
@@ -73,14 +104,20 @@ class XboxUser extends PlatformUser {
 				]
 			]);
 		}
-		catch(\Exception $ex) {
+		catch(TransferException $ex) {
 			throw new XboxAuthenticationException(
 					'Failed to POST Microsoft details', 0, $ex);
 		}
 		
-		if(String::startsWith($resp2->getEffectiveUrl(), 'https://login.live.com/ppsecure/')){
-			throw new XboxAuthenticationException(
-					'Xbox authentication failed');
+		//Still on login.live.com, assume bad email/password
+		if($uri->getHost() === 'login.live.com'){
+			throw new XboxAuthenticationException('Microsoft authentication failed');
+		}
+		
+		
+		//Check for unregistered bungie.net user
+		if(StringFunctions::endsWith(\strtolower($uri->getPath()), 'register')){
+			throw new BungieAuthenticationException('Unregistered user');
 		}
 		
 	}

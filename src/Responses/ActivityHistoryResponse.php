@@ -2,24 +2,28 @@
 
 namespace BungieNetPlatform\Responses;
 
+use Cola\ArrayList;
+use BungieNetPlatform\PlatformResponse;
+use BungieNetPlatform\Services\Destiny\ActivityHistoryItem;
+
 /**
  * ActivityHistoryResponse
  */
 class ActivityHistoryResponse extends Response {
 
 	/**
-	 * @var \Cola\Set
+	 * @var ArrayList|ActivityHistoryItem[]
 	 */
 	public $Activities;
 	
-	public function __construct(\stdClass $json) {
+	public function __construct(PlatformResponse $response) {
 		
-		parent::__construct($json);
+		parent::__construct($response);
 		
-		$this->Activities = new \Cola\Set();
+		$this->Activities = new ArrayList();
 		
-		foreach($json->Response->data->activities as $act){
-			$this->Activities[] = Parsing\Character::parseActivityHistoryItem($act);
+		foreach($response->getResponse()->data->activities as $act){
+			$this->Activities->add(Parsing\Character::parseActivityHistoryItem($act));
 		}
 		
 	}

@@ -20,6 +20,7 @@ use BungieNetPlatform\Services\Destiny\ActivityHistoryItemDetails;
 use BungieNetPlatform\Services\Destiny\ActivityHistoryItemStat;
 use BungieNetPlatform\Services\Destiny\ActivityHistoryItemStatBasic;
 use BungieNetPlatform\Enums\DestinyActivityModeType;
+use Cola\Set;
 use GuzzleHttp\Psr7\Uri;
 
 /**
@@ -96,7 +97,7 @@ abstract class Character {
 		foreach($json as $name => $obj){
 			$stat = static::parseStat($obj);
 			$stat->Name = $name;
-			$coll[] = $stat;
+			$coll->add($stat);
 		}
 		
 		return $coll;
@@ -148,7 +149,7 @@ abstract class Character {
 	
 	public static function parseEquipment(array $arr){
 		
-		$set = new \Cola\Set();
+		$set = new Set();
 		
 		foreach($arr as $obj){
 			
@@ -159,7 +160,7 @@ abstract class Character {
 				$equipment->Dyes = static::parseDye($dyeObj);
 			}
 			
-			$set[] = $equipment;
+			$set->add($equipment);
 			
 		}
 		

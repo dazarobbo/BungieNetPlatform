@@ -8,6 +8,9 @@ namespace BungieNetPlatform\Services\Destiny\Manifest;
  * Retrieves content from a database matching a given hash
  * value. Content is cached for faster access with no limit
  * to its size by default.
+ * 
+ * @author dazarobbo <dazarobbo@live.com>
+ * @since version 1.0.0
  */
 class CachedHashTranslator extends BasicHashTranslator {
 
@@ -19,7 +22,7 @@ class CachedHashTranslator extends BasicHashTranslator {
 	
 	/**
 	 * Cache of items from database indexed by normalised hash value.
-	 * It is structured as follows.<br><br>
+	 * It is structured as follows.
 	 * [
 	 *		'hash value' => [
 	 *			'hash type' => content,
@@ -28,7 +31,7 @@ class CachedHashTranslator extends BasicHashTranslator {
 	 * ]
 	 * @var array
 	 */
-	protected $_Cache = [];
+	protected $_Cache = array();
 	
 	/**
 	 * Maximum number of results permitted in cache
@@ -93,7 +96,7 @@ class CachedHashTranslator extends BasicHashTranslator {
 	 * Sets an item in the cache and removes old items when
 	 * necessary
 	 * @param Hash $hash
-	 * @param \Cola\Set $content
+	 * @param mixed $content
 	 */
 	protected function setCacheItem(Hash $hash, $content){
 		

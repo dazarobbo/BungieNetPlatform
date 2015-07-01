@@ -4,6 +4,10 @@ namespace BungieNetPlatform\Services\Destiny\Manifest;
 
 /**
  * IHashTranslator
+ * 
+ * @since version 1.0.0
+ * @version 1.0.0
+ * @author dazarobbo <dazarobbo@live.com>
  */
 interface IHashTranslator {
 	

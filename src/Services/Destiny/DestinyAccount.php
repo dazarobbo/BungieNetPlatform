@@ -2,6 +2,8 @@
 
 namespace BungieNetPlatform\Services\Destiny;
 
+use Cola\ArrayList;
+
 /**
  * DestinyAccount
  */
@@ -18,7 +20,7 @@ class DestinyAccount extends \Cola\Object {
 	public $MembershipType;
 	
 	/**
-	 * @var \Cola\Set|Character[]
+	 * @var ArrayList|Character[]
 	 */
 	public $Characters;
 	
@@ -43,7 +45,7 @@ class DestinyAccount extends \Cola\Object {
 	public $GrimoireScore;
 	
 	public function __construct() {
-		$this->Characters = new \Cola\Set();
+		$this->Characters = new ArrayList();
 	}
 
 }

@@ -2,6 +2,8 @@
 
 namespace BungieNetPlatform\Services\Destiny;
 
+use Cola\Set;
+
 /**
  * ActivityHistoryItem
  */
@@ -18,12 +20,12 @@ class ActivityHistoryItem extends \Cola\Object {
 	public $Details;
 	
 	/**
-	 * @var \Cola\Set
+	 * @var Set|ActivityHistoryItemStat[]
 	 */
 	public $Values;
 	
 	public function __construct() {
-		$this->Values = new \Cola\Set();
+		$this->Values = new Set();
 		$this->Details = new ActivityHistoryItemDetails();
 	}
 

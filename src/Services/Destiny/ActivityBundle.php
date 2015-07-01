@@ -2,12 +2,12 @@
 
 namespace BungieNetPlatform\Services\Destiny;
 
-use Cola\Object;
+use Cola\ArrayList;
 
 /**
  * ActivityBundle
  */
-class ActivityBundle extends Object {
+class ActivityBundle extends \Cola\Object {
 
 	/**
 	 * @var Manifest\Hash
@@ -55,12 +55,13 @@ class ActivityBundle extends Object {
 	public $ActivityTypeHash;
 	
 	/**
-	 * @var Manifest\Hash[]
+	 * @var ArrayList|Manifest\Hash
 	 */
-	public $ActivityHashes = [];
+	public $ActivityHashes;
 	
 	
 	public function __construct() {
+		$this->ActivityHashes = new ArrayList();
 	}
 	
 	public function __toString() {

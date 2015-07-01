@@ -9,6 +9,12 @@ use BungieNetPlatform\Enums\HashType;
 
 /**
  * Hash
+ * 
+ * $hash = new Hash('43786345', HashType::ACTIVITY());
+ * 
+ * @since version 1.0.0
+ * @version 1.0.0
+ * @author dazarobbo <dazarobbo@live.com>
  */
 class Hash extends Object implements IEquatable {
 
@@ -28,6 +34,11 @@ class Hash extends Object implements IEquatable {
 	protected static $DefaultHashTranslator = null;
 	
 	
+	/**
+	 * Create a new hash
+	 * @param string $str
+	 * @param HashType $type
+	 */
 	public function __construct($str, HashType $type = null){
 		$this->_Hash = \strval($str);
 		$this->_Type = $type;
@@ -51,20 +62,19 @@ class Hash extends Object implements IEquatable {
 	/**
 	 * Given an IHashTranslator, returns the content related to this hash value.
 	 * If one is not provided, a previously-set default translator will be tried.
-	 * @param \BungieNetPlatform\Services\Destiny\Manifest\IHashTranslator $translator
+	 * @param IHashTranslator $translator
 	 * @return mixed
 	 */
 	public function getContent(IHashTranslator $translator = null){
 		
-		$translator = $translator
-				? $translator
-				: static::$DefaultHashTranslator;
-		
-		if($translator === null){
-			throw new \DomainException('No translator defined');
+		if(isset($translator)){
+			return $translator->getContent($this);
+		}
+		else if(isset(static::$DefaultHashTranslator)){
+			return static::$DefaultHashTranslator->getContent($this);
 		}
 		
-		return $translator->getContent($this);
+		throw new \DomainException('No translator defined');
 		
 	}
 	
@@ -79,7 +89,7 @@ class Hash extends Object implements IEquatable {
 	/**
 	 * Sets a default translator to be used for any Hash instance when getContent
 	 * is called without a parameter.
-	 * @param \BungieNetPlatform\Services\Destiny\Manifest\IHashTranslator $translator
+	 * @param IHashTranslator $translator
 	 */
 	public static function setDefaultTranslator(IHashTranslator $translator){
 		static::$DefaultHashTranslator = $translator;
@@ -96,7 +106,7 @@ class Hash extends Object implements IEquatable {
 	}
 	
 	public function __toString() {
-		return (string)$this->_Hash;
+		return $this->_Hash;
 	}
 	
 	/**

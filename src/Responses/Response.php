@@ -7,22 +7,28 @@ use Cola\Object;
 
 /**
  * Response
+ * 
+ * Base class for endpoint responses
+ * 
+ * @since version 1.0.0
+ * @version 1.0.0
+ * @author dazarobbo <dazarobbo@live.com>
  */
-abstract class Response extends Object {
+class Response extends Object {
 
 	/**
 	 * Inner response
-	 * @var \BungieNetPlatform\PlatformResponse
+	 * @var PlatformResponse
 	 */
 	protected $_PlatformResponse;
 
-	public function __construct(\stdClass $json) {
-		$this->_PlatformResponse = new PlatformResponse($json);
+	public function __construct(PlatformResponse $response) {
+		$this->_PlatformResponse = $response;
 	}
 	
 	/**
 	 * Returns the base response information
-	 * @return \BungieNetPlatform\PlatformResponse
+	 * @return PlatformResponse
 	 */
 	public function &getInnerResponse(){
 		return $this->_PlatformResponse;

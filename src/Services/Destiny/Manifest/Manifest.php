@@ -2,9 +2,10 @@
 
 namespace BungieNetPlatform\Services\Destiny\Manifest;
 
-use BungieNetPlatform\BungieNet;
 use Cola\Object;
 use Cola\IComparable;
+use BungieNetPlatform\BungieNet;
+use GuzzleHttp\Client as GuzzleClient;
 
 /**
  * Manifest
@@ -51,14 +52,21 @@ class Manifest extends Object implements IComparable {
 	public function getVersion(){
 		return $this->_Version;
 	}
-		
+	
 	/**
 	 * Retrieves the latest manifest from bungie.net
+	 * 
+	 * @since version 1.0.0
+	 * @version 1.0.0
+	 * @author dazarobbo <dazarobbo@live.com>
+	 * @todo modify to use updated Guzzle and Platform endpoint
 	 * @return \static
 	 */
 	public static function getLatestManifest(){
 		
-		$client = new \GuzzleHttp\Client(['base_url' => BungieNet::PlatformPath() . '/']);
+		$client = new GuzzleClient([
+			'base_url' => BungieNet::PlatformPath() . '/'
+		]);
 		$resp = $client->get('destiny/manifest')->json();
 		
 		$self = new static();

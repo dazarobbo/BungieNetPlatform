@@ -2,6 +2,8 @@
 
 namespace BungieNetPlatform\Services\Destiny;
 
+use BungieNetPlatform\Enums\DestinyActivityModeType;
+
 /**
  * ActivityHistoryItemDetails
  */
@@ -18,12 +20,15 @@ class ActivityHistoryItemDetails extends \Cola\Object {
 	public $InstanceId;
 	
 	/**
-	 * @var int
+	 * @var DestinyActivityModeType
 	 */
 	public $Mode;
 	
 	public function __construct() {
-		
+	}
+	
+	public function __toString() {
+		return (string)$this->InstanceId;
 	}
 
 }

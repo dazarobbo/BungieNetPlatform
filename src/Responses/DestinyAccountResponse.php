@@ -2,6 +2,7 @@
 
 namespace BungieNetPlatform\Responses;
 
+use BungieNetPlatform\PlatformResponse;
 use BungieNetPlatform\Services\Destiny\DestinyAccount;
 
 /**
@@ -14,11 +15,12 @@ class DestinyAccountResponse extends Response {
 	 */
 	public $Account;
 	
-	public function __construct(\stdClass $json) {
+	public function __construct(PlatformResponse $response) {
 		
-		parent::__construct($json);
+		parent::__construct($response);
 		
-		$this->Account = Parsing\Account::parseAccount($json->Response->data);
+		$this->Account = Parsing\Account::parseAccount(
+				$response->getResponse()->data);
 		
 	}
 	

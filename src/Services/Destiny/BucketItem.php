@@ -2,13 +2,15 @@
 
 namespace BungieNetPlatform\Services\Destiny;
 
+use Cola\ArrayList;
+
 /**
  * BucketItem
  */
 class BucketItem extends \Cola\Object {
 
 	/**
-	 * @var \Cola\Set
+	 * @var ArrayList
 	 */
 	public $Items;
 	
@@ -18,7 +20,7 @@ class BucketItem extends \Cola\Object {
 	public $Hash;
 	
 	public function __construct() {
-		$this->Items = new \Cola\Set();
+		$this->Items = new ArrayList();
 	}
 
 }

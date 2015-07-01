@@ -18,7 +18,7 @@ class ContentDatabase extends Database {
 	/**
 	 * @var string database charset
 	 */
-	const CHARSET = 'utf8';
+	const CHARSET = 'UTF8';
 	
 	
 	/**
