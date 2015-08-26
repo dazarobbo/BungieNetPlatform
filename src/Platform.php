@@ -102,12 +102,7 @@ class Platform extends Object {
 		$options = [
 			'decode_content' => 'gzip',
 			'debug' => true
-		];
-		
-		//Add base bungie.net URI details
-		$request = $request->withUri(
-					BungieNet::getBaseUri()->withPath(
-							$request->getUri()->getPath()));
+		];	
 				
 		//Add API key header
 		if($this->_ApiKey !== null){

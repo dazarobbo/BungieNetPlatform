@@ -15,7 +15,7 @@ class DestinyClass extends \Cola\Enum {
 	/**
 	 * Returns the name of the class as a capitalised word
 	 * @example 'Warlock'
-	 * @return type
+	 * @return string
 	 */
 	public function toWord(){
 		return \ucfirst(\strtolower($this->getName()));

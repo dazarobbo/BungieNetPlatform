@@ -156,7 +156,7 @@ class DestinyService extends Service {
 			$page = 0){
 		
 		$request = new Request('GET', \sprintf(
-				'/Stats/ActivityHistory/%s/%s/%s',
+				'/Stats/ActivityHistory/%s/%s/%s/',
 				(string)$membershipType,
 				$destinyMembershipId,
 				$characterId));
@@ -170,7 +170,7 @@ class DestinyService extends Service {
 				]));
 		
 		$request = $request->withUri($uri);
-		
+
 		return new ActivityHistoryResponse($this->doRequest(
 				$request));
 		

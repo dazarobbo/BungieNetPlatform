@@ -46,12 +46,20 @@ abstract class Service extends Object {
 	 */
 	protected function doRequest(PsrRequest $psrRequest){
 		
-		//Append the platform segment to the partial request path
 		$uri = BungieNet::getPlatformUri();
-		$uri = $uri->withPath($uri->getPath() . '/' . $this->_Name .
-				$psrRequest->getUri()->getPath());
+		
+		$uri = $uri->withPath(
+					$uri->getPath() .
+					'/' .
+					$this->_Name . 
+					$psrRequest->getUri()->getPath());
+		
+		$uri = $uri->withQuery($psrRequest->getUri()->getQuery());
+		$uri = $uri->withFragment($psrRequest->getUri()->getFragment());
 		
 		$psrRequest = $psrRequest->withUri($uri);
+		
+		//
 		
 		$psrResponse = $this->_Platform->httpRequest($psrRequest);
 		
